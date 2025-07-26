@@ -69,13 +69,42 @@
       </a>
     </div>
 
+    <!-- Rating dan Komentar -->
+    <div class="mt-10 w-full max-w-md px-4 space-y-6">
+      <h2 class="text-xl font-semibold text-center">Apa kata mereka?</h2>
+      
+      <div class="bg-gray-800 rounded-lg p-4 shadow-md">
+        <div class="flex justify-between items-center mb-1">
+          <span class="font-semibold">🌟 Farhan N.</span>
+          <div class="text-yellow-400">★★★★★</div>
+        </div>
+        <p class="text-sm text-gray-300">Akun yang aku beli langsung masuk. Top seller banget sih!</p>
+      </div>
+      
+      <div class="bg-gray-800 rounded-lg p-4 shadow-md">
+        <div class="flex justify-between items-center mb-1">
+          <span class="font-semibold">🌟 Dini M.</span>
+          <div class="text-yellow-400">★★★★☆</div>
+        </div>
+        <p class="text-sm text-gray-300">Fast respon dan aman, cuma sedikit delay konfirmasi aja.</p>
+      </div>
+
+      <div class="bg-gray-800 rounded-lg p-4 shadow-md">
+        <div class="flex justify-between items-center mb-1">
+          <span class="font-semibold">🌟 Zidan R.</span>
+          <div class="text-yellow-400">★★★★★</div>
+        </div>
+        <p class="text-sm text-gray-300">Recommended seller! Semua proses lancar dan terpercaya.</p>
+      </div>
+    </div>
+
     <!-- Musik -->
     <audio id="bgMusic" loop>
       <source src="jenztyzz.mp3" type="audio/mp3">
     </audio>
 
     <!-- Footer -->
-    <footer class="mt-20 text-sm text-gray-500">
+    <footer class="mt-16 text-sm text-gray-500">
       © 2025 Jenz Tyzz
     </footer>
   </div>
@@ -89,24 +118,17 @@
     const intro = document.getElementById('intro');
 
     function startApp() {
-      // Kecilkan foto dan simpan border
       profilePic.classList.remove('w-72', 'h-72');
       profilePic.classList.add('w-60', 'h-60');
-
-      // Hilangkan teks
       profileName.style.opacity = '0';
       username.style.opacity = '0';
-
-      // Hilangkan tombol
       startBtn.style.opacity = '0';
       startBtn.style.pointerEvents = 'none';
-      
-      // Putar musik
-document.getElementById('bgMusic').play().catch(() => {
-  console.log("Autoplay gagal, user perlu interaksi.");
-});
 
-      // Tampilkan halaman 2
+      document.getElementById('bgMusic').play().catch(() => {
+        console.log("Autoplay gagal, user perlu interaksi.");
+      });
+
       setTimeout(() => {
         intro.style.opacity = '0';
         intro.style.pointerEvents = 'none';
