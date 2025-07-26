@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>JENZ TYZZ | WebStore</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+  <style>
+    .transition-all-smooth {
+      transition: all 0.6s ease;
+    }
+  </style>
+</head>
+<body class="bg-gray-900 text-gray-100 min-h-screen flex flex-col items-center justify-start relative">
+
+  <!-- HALAMAN 1 -->
+  <div id="intro" class="absolute top-0 left-0 w-full h-full flex flex-col items-center transition-all-smooth z-10 pt-14">
+    <div class="h-6"></div> <!-- Spacer tambahan -->
+    <div id="profile-wrapper" class="transition-all-smooth flex flex-col items-center">
+      <img id="profile-pic" src="jenztyzz.jpg" alt="JENZ TYZZ"
+           class="w-72 h-72 rounded-full mb-3 border-4 border-gray-500 shadow-xl transition-all-smooth">
+      <h1 id="profile-name" class="text-4xl font-bold mb-1 transition-all-smooth">Jenz Tyzz</h1>
+      <p id="username" class="text-sm text-gray-400 transition-all-smooth mb-3">@JenzTyzz</p>
+    </div>
+    <button id="startBtn" onclick="startApp()" class="bg-blue-600 hover:bg-blue-700 transition text-white font-semibold px-6 py-2 rounded-lg mt-2">
+      Lanjutkan
+    </button>
+  </div>
+
+  <!-- HALAMAN 2 -->
+  <div id="mainContent" class="opacity-0 pointer-events-none transition-all-smooth flex flex-col items-center mt-20 z-0">
+
+    <img src="jenztyzz.jpg" alt="JENZ TYZZ" class="w-60 h-60 rounded-full mb-4 border-4 border-gray-500 shadow-lg">
+    <h1 class="text-2xl font-semibold mb-1">Jenz Tyzz</h1>
+    <p class="text-gray-400 mb-4">@JenzTyzz</p>
+
+    <p class="text-center max-w-xs text-gray-300 mb-6">
+      𝙹𝚄𝙰𝙻 𝙰𝙺𝚄𝙽 𝙱𝙴𝚁𝙶𝙰𝚁𝙰𝙽𝚂𝙸 <br>
+      𝙰𝙺𝚄𝙽 𝚈𝙰𝙽𝙶 𝙳𝙸𝙹𝚄𝙰𝙻 𝚄𝙳𝙷 𝙿𝙰𝚂𝚃𝙸 𝚂𝙰𝙵𝙴 <br>
+      ʜᴜʙᴜɴɢɪ ᴊᴇɴᴢ ᴛʏᴢᴢ ᴅᴇɴɢᴀɴ
+    </p>
+
+    <!-- Tombol Kontak -->
+    <div class="space-y-4 w-full max-w-xs">
+      <a href="https://wa.me/6289506747054" target="_blank"
+        class="flex flex-col items-center bg-green-600 hover:bg-green-700 transition rounded-lg py-3 font-medium">
+        <div class="flex items-center space-x-2">
+          <i class="fab fa-whatsapp text-xl"></i>
+          <span>JENZ TYZZ</span>
+        </div>
+        <span class="text-xs text-green-200 mt-1">Nomor Pertama</span>
+      </a>
+      <a href="https://wa.me/27751310008" target="_blank"
+        class="flex flex-col items-center bg-green-500 hover:bg-green-600 transition rounded-lg py-3 font-medium">
+        <div class="flex items-center space-x-2">
+          <i class="fab fa-whatsapp text-xl"></i>
+          <span>JENZ TYZZ</span>
+        </div>
+        <span class="text-xs text-green-100 mt-1">Nomor Kedua</span>
+      </a>
+      <a href="https://t.me/JenzTyzz" target="_blank"
+        class="flex flex-col items-center bg-blue-500 hover:bg-blue-600 transition rounded-lg py-3 font-medium">
+        <div class="flex items-center space-x-2">
+          <i class="fab fa-telegram-plane text-xl"></i>
+          <span>JENZ TYZZ</span>
+        </div>
+        <span class="text-xs text-blue-100 mt-1">Telegram</span>
+      </a>
+    </div>
+
+    <!-- Musik -->
+    <audio id="bgMusic" loop>
+      <source src="jenztyzz.mp3" type="audio/mp3">
+    </audio>
+
+    <!-- Footer -->
+    <footer class="mt-20 text-sm text-gray-500">
+      © 2025 Jenz Tyzz
+    </footer>
+  </div>
+
+  <script>
+    const profilePic = document.getElementById('profile-pic');
+    const profileName = document.getElementById('profile-name');
+    const username = document.getElementById('username');
+    const startBtn = document.getElementById('startBtn');
+    const mainContent = document.getElementById('mainContent');
+    const intro = document.getElementById('intro');
+
+    function startApp() {
+      // Kecilkan foto dan simpan border
+      profilePic.classList.remove('w-72', 'h-72');
+      profilePic.classList.add('w-60', 'h-60');
+
+      // Hilangkan teks
+      profileName.style.opacity = '0';
+      username.style.opacity = '0';
+
+      // Hilangkan tombol
+      startBtn.style.opacity = '0';
+      startBtn.style.pointerEvents = 'none';
+      
+      // Putar musik
+document.getElementById('bgMusic').play().catch(() => {
+  console.log("Autoplay gagal, user perlu interaksi.");
+});
+
+      // Tampilkan halaman 2
+      setTimeout(() => {
+        intro.style.opacity = '0';
+        intro.style.pointerEvents = 'none';
+        mainContent.classList.remove('opacity-0', 'pointer-events-none');
+      }, 600);
+    }
+  </script>
+</body>
+</html>
