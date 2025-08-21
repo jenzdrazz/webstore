@@ -1,326 +1,277 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>JENZ TYZZ | WebStore</title>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
-  <style>
-    .transition-all-smooth {
-      transition: all 0.6s ease;
-    }
-    body.noscroll {
-    overflow: hidden;
-    height: 100vh;
-    position: fixed;
-    width: 100%;
-  }
-  </style>
-</head>
-<body class="bg-gray-900 text-gray-100 min-h-screen flex flex-col items-center justify-start relative">
+<!DOCTYPE html>  <html lang="id">  
+<head>  
+  <meta charset="UTF-8" />  
+  <meta name="viewport" content="width=device-width, initial-scale=1" />  
+  <title>JENZ TYZZ | WebStore</title>  
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">  
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">  
+  <style>  
+    .transition-all-smooth {  
+      transition: all 0.6s ease;  
+    }  
+    body.noscroll {  
+    overflow: hidden;  
+    height: 100vh;  
+    position: fixed;  
+    width: 100%;  
+  }  
+  </style>  
+</head>  
+<body class="bg-gray-900 text-gray-100 min-h-screen flex flex-col items-center justify-start relative">    <!-- HALAMAN 1 -->  <div id="intro" class="absolute top-0 left-0 w-full h-full flex flex-col items-center transition-all-smooth z-10 pt-14 overflow-hidden">  
+  <div class="h-6"></div> <!-- Spacer tambahan -->  
+  <div id="profile-wrapper" class="transition-all-smooth flex flex-col items-center">  
+    <img id="profile-pic" src="jenztyzz.jpg" alt="JENZ TYZZ"  
+         class="w-72 h-72 rounded-full mb-3 border-4 border-gray-500 shadow-xl transition-all-smooth">  
+    <h1 id="profile-name" class="text-4xl font-bold mb-1 transition-all-smooth">Jenz Tyzz</h1>  
+    <p id="username" class="text-sm text-gray-400 transition-all-smooth mb-3">@JenzTyzz</p>  
+  </div>  
+  <button id="startBtn" onclick="startApp()" class="bg-blue-600 hover:bg-blue-700 transition text-white font-semibold px-6 py-2 rounded-lg mt-2">  
+    Lanjutkan  
+  </button>  
+</div>    <!-- HALAMAN 2 -->    <div id="mainContent" class="opacity-0 pointer-events-none transition-all-smooth flex flex-col items-center mt-20 z-0">  <img src="jenztyzz.jpg" alt="JENZ TYZZ" class="w-60 h-60 rounded-full mb-4 border-4 border-gray-500 shadow-lg">  
+<h1 class="text-2xl font-semibold mb-1 flex items-center gap-2">
 
-  <!-- HALAMAN 1 -->
-<div id="intro" class="absolute top-0 left-0 w-full h-full flex flex-col items-center transition-all-smooth z-10 pt-14 overflow-hidden">
-  <div class="h-6"></div> <!-- Spacer tambahan -->
-  <div id="profile-wrapper" class="transition-all-smooth flex flex-col items-center">
-    <img id="profile-pic" src="jenztyzz.jpg" alt="JENZ TYZZ"
-         class="w-72 h-72 rounded-full mb-3 border-4 border-gray-500 shadow-xl transition-all-smooth">
-    <h1 id="profile-name" class="text-4xl font-bold mb-1 transition-all-smooth">Jenz Tyzz</h1>
-    <p id="username" class="text-sm text-gray-400 transition-all-smooth mb-3">@JenzTyzz</p>
-  </div>
-  <button id="startBtn" onclick="startApp()" class="bg-blue-600 hover:bg-blue-700 transition text-white font-semibold px-6 py-2 rounded-lg mt-2">
-    Lanjutkan
-  </button>
-</div>
+Jenz Tyzz
+<i class="fas fa-check-circle text-blue-500"></i>
 
-  <!-- HALAMAN 2 -->
-  <div id="mainContent" class="opacity-0 pointer-events-none transition-all-smooth flex flex-col items-center mt-20 z-0">
+</h1>  
+    <p class="text-gray-400 mb-4">@JenzTyzz</p>  <p class="text-center max-w-xs text-gray-300 mb-6">  
+   𝙰𝙺𝚄𝙽 𝙱𝙴𝚁𝙶𝙰𝚁𝙰𝙽𝚂𝙸 <br>  
+  𝙰𝙺𝚄𝙽 𝚈𝙰𝙽𝙶 𝙳𝙸𝙹𝚄𝙰𝙻 𝚄𝙳𝙷 𝙿𝙰𝚂𝚃𝙸 𝚂𝙰𝙵𝙴 <br>  
+  ʜᴜʙᴜɴɢɪ ᴊᴇɴᴢ ᴛʏᴢᴢ ᴅᴇɴɢᴀɴ  
+</p>  
 
-    <img src="jenztyzz.jpg" alt="JENZ TYZZ" class="w-60 h-60 rounded-full mb-4 border-4 border-gray-500 shadow-lg">
-    <h1 class="text-2xl font-semibold mb-1 flex items-center gap-2">
-  Jenz Tyzz
-  <i class="fas fa-check-circle text-blue-500"></i>
-</h1>
-    <p class="text-gray-400 mb-4">@JenzTyzz</p>
+<!-- Tombol Kontak -->  
+<div class="space-y-4 w-full max-w-xs">  
+  <a href="https://wa.me/6289506747054" target="_blank"  
+    class="flex flex-col items-center bg-green-600 hover:bg-green-700 transition rounded-lg py-3 font-medium">  
+    <div class="flex items-center space-x-2">  
+      <i class="fab fa-whatsapp text-xl"></i>  
+      <span>JENZ TYZZ</span>  
+    </div>  
+    <span class="text-xs text-green-200 mt-1">Nomor Pertama</span>  
+  </a>  
+  <a href="https://wa.me/6285722099444" target="_blank"  
+    class="flex flex-col items-center bg-green-500 hover:bg-green-600 transition rounded-lg py-3 font-medium">  
+    <div class="flex items-center space-x-2">  
+      <i class="fab fa-whatsapp text-xl"></i>  
+      <span>JENZ TYZZ</span>  
+    </div>  
+    <span class="text-xs text-green-100 mt-1">Nomor Kedua</span>  
+  </a>  
+  <a href="https://t.me/JenzTyzz" target="_blank"  
+    class="flex flex-col items-center bg-blue-500 hover:bg-blue-600 transition rounded-lg py-3 font-medium">  
+    <div class="flex items-center space-x-2">  
+      <i class="fab fa-telegram-plane text-xl"></i>  
+      <span>JENZ TYZZ</span>  
+    </div>  
+    <span class="text-xs text-blue-100 mt-1">Telegram</span>  
+  </a>  
+</div>  
+  
+<button onclick="showStockPage()" class="bg-green-600 hover:bg-green-700 text-white font-semibold px-6 py-2 rounded-lg mt-4 z-10">
 
-    <p class="text-center max-w-xs text-gray-300 mb-6">
-       𝙰𝙺𝚄𝙽 𝙱𝙴𝚁𝙶𝙰𝚁𝙰𝙽𝚂𝙸 <br>
-      𝙰𝙺𝚄𝙽 𝚈𝙰𝙽𝙶 𝙳𝙸𝙹𝚄𝙰𝙻 𝚄𝙳𝙷 𝙿𝙰𝚂𝚃𝙸 𝚂𝙰𝙵𝙴 <br>
-      ʜᴜʙᴜɴɢɪ ᴊᴇɴᴢ ᴛʏᴢᴢ ᴅᴇɴɢᴀɴ
-    </p>
-
-    <!-- Tombol Kontak -->
-    <div class="space-y-4 w-full max-w-xs">
-      <a href="https://wa.me/6289506747054" target="_blank"
-        class="flex flex-col items-center bg-green-600 hover:bg-green-700 transition rounded-lg py-3 font-medium">
-        <div class="flex items-center space-x-2">
-          <i class="fab fa-whatsapp text-xl"></i>
-          <span>JENZ TYZZ</span>
-        </div>
-        <span class="text-xs text-green-200 mt-1">Nomor Pertama</span>
-      </a>
-      <a href="https://wa.me/6289506747054" target="_blank"
-        class="flex flex-col items-center bg-green-500 hover:bg-green-600 transition rounded-lg py-3 font-medium">
-        <div class="flex items-center space-x-2">
-          <i class="fab fa-whatsapp text-xl"></i>
-          <span>JENZ TYZZ</span>
-        </div>
-        <span class="text-xs text-green-100 mt-1">Nomor Kedua</span>
-      </a>
-      <a href="https://t.me/JenzTyzz" target="_blank"
-        class="flex flex-col items-center bg-blue-500 hover:bg-blue-600 transition rounded-lg py-3 font-medium">
-        <div class="flex items-center space-x-2">
-          <i class="fab fa-telegram-plane text-xl"></i>
-          <span>JENZ TYZZ</span>
-        </div>
-        <span class="text-xs text-blue-100 mt-1">Telegram</span>
-      </a>
-    </div>
-    
-    <button onclick="showStockPage()" class="bg-green-600 hover:bg-green-700 text-white font-semibold px-6 py-2 rounded-lg mt-4 z-10">
   Ready Stock
 </button>
-    
-    <!-- Tombol buka chatbot -->
-<button id="openChatbot"
-  class="flex flex-col items-center bg-yellow-600 hover:bg-yellow-700 transition rounded-lg py-3 font-medium w-full max-w-xs mt-3">
-  <div class="flex items-center space-x-2 justify-center">
-    <i class="fas fa-lock text-white"></i>
-    <span>Cara Amankan Akun</span>
-  </div>
-</button
 
-<!-- Tombol JOIN GRUP 1 -->
-<a href="https://chat.whatsapp.com/LMitrun6Z5yHOC04OfLMa4?mode=ac_t" target="_blank"
-  class="mt-6 flex flex-col items-center bg-green-600 hover:bg-green-700 transition rounded-lg py-3 font-medium w-full max-w-xs">
-  <div class="flex items-center space-x-2">
-    <i class="fab fa-whatsapp text-xl"></i>
-    <span>JOIN GRUP</span>
-  </div>
-  <span class="text-xs text-green-200 mt-1">JENZTYZZ1</span>
+<!-- Tombol Edit Spek -->
+<a href="https://editspek-jenztyzz.vercel.app/" target="_blank"
+  class="bg-purple-600 hover:bg-purple-700 text-white font-semibold px-6 py-2 rounded-lg mt-3 z-10">
+  Auto Edit Spek Akun Mu
 </a>
 
-<!-- Tombol JOIN GRUP 2 -->
-<a href="https://chat.whatsapp.com/XXXXXXXXX?mode=ac_t" target="_blank"
-  class="mt-6 flex flex-col items-center bg-green-600 hover:bg-green-700 transition rounded-lg py-3 font-medium w-full max-w-xs">
-  <div class="flex items-center space-x-2">
-    <i class="fab fa-whatsapp text-xl"></i>
-    <span>JOIN GRUP</span>
-  </div>
-  <span class="text-xs text-green-200 mt-1">JENZTYZZ1</span>
-</a>
+<!-- Tombol buka chatbot -->
 
-<!-- Tombol JOIN GRUP 3 -->
-<a href="https://chat.whatsapp.com/XXXXXXXXXXXX?mode=ac_t" target="_blank"
-  class="mt-6 flex flex-col items-center bg-green-600 hover:bg-green-700 transition rounded-lg py-3 font-medium w-full max-w-xs">
-  <div class="flex items-center space-x-2">
-    <i class="fab fa-whatsapp text-xl"></i>
-    <span>JOIN GRUP</span>
-  </div>
-  <span class="text-xs text-green-200 mt-1">JENZTYZZ1</span>
-</a>
+<button id="openChatbot"  
+class="flex flex-col items-center bg-yellow-600 hover:bg-yellow-700 transition rounded-lg py-3 font-medium w-full max-w-xs mt-3">
 
-    <!-- Musik -->
-    <audio id="bgMusic" loop>
-      <source src="jenztyzz.mp3" type="audio/mp3">
-    </audio>
+  <div class="flex items-center space-x-2 justify-center">  
+    <i class="fas fa-lock text-white"></i>  
+    <span>Cara Amankan Akun</span>  
+  </div>  
+</button  <!-- Tombol JOIN GRUP 1 -->  <a href="https://chat.whatsapp.com/LMitrun6Z5yHOC04OfLMa4?mode=ac_t" target="_blank"  
+class="mt-6 flex flex-col items-center bg-green-600 hover:bg-green-700 transition rounded-lg py-3 font-medium w-full max-w-xs">
 
-    <!-- Footer -->
-    <footer class="mt-15 text-sm text-gray-500">
-      © 2025 Jenz Tyzz
-    </footer>
-  </div>
-  
-  <!-- HALAMAN 3: READY STOCK -->
-<div id="stockPage" class="absolute top-0 left-0 w-full min-h-screen bg-neutral-950 text-white opacity-0 pointer-events-none transition-all-smooth z-40 p-6">
-  <h2 class="text-3xl font-bold text-center mb-6 text-white">Ready Stock Akun</h2>
+  <div class="flex items-center space-x-2">  
+    <i class="fab fa-whatsapp text-xl"></i>  
+    <span>JOIN GRUP</span>  
+  </div>  
+  <span class="text-xs text-green-200 mt-1">JENZTYZZ1</span>  
+</a>  <!-- Musik -->  
+<audio id="bgMusic" loop>  
+  <source src="jenztyzz.mp3" type="audio/mp3">  
+</audio>  
 
-  <div class="space-y-6">
-    <!-- Stok 1 -->
-    <div class="bg-gray-100 p-4 rounded-xl shadow-md text-center">
-      <h3 class="text-lg font-semibold mb-1 text-gray-500">Sg2 Gurun Pasir</h3>
-      <p class="text-sm text-gray-600 mb-3">LOG GOOGLE BINKOS | VAULT TW 100 | AKUN SAFE
-OP? 40+ NOPAS (akun gabisa di hb)
-#StaySafe With JenzTyzz</p>
-      <button onclick="showStockImage('stok1.jpg')" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg">Lihat Stok 1</button>
-    </div>
+<!-- Footer -->  
+<footer class="mt-15 text-sm text-gray-500">  
+  © 2025 Jenz Tyzz  
+</footer>
 
-    <!-- Stok 2 -->
-    <div class="bg-gray-100 p-4 rounded-xl shadow-md text-center">
-      <h3 class="text-lg font-semibold mb-1 text-gray-500">MAX 3 700K</h3>
-      <p class="text-sm text-gray-600 mb-3">EVO 9 MAX 3 | SG 5 RASA | BUNDLE LEGENDARY 3 | NARUTO ON | SASUKE ON
+  </div>    <!-- HALAMAN 3: READY STOCK -->  <div id="stockPage" class="absolute top-0 left-0 w-full min-h-screen bg-neutral-950 text-white opacity-0 pointer-events-none transition-all-smooth z-40 p-6">  
+  <h2 class="text-3xl font-bold text-center mb-6 text-white">Ready Stock Akun</h2>    <div class="space-y-6">  
+    <!-- Stok 1 -->  
+    <div class="bg-gray-100 p-4 rounded-xl shadow-md text-center">  
+      <h3 class="text-lg font-semibold mb-1 text-gray-500">Sg2 Gurun Pasir</h3>  
+      <p class="text-sm text-gray-600 mb-3">LOG GOOGLE BINKOS | VAULT TW 100 | AKUN SAFE  
+OP? 40+ NOPAS (akun gabisa di hb)  
+#StaySafe With JenzTyzz</p>  
+      <button onclick="showStockImage('stok1.jpg')" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg">Lihat Stok 1</button>  
+    </div>  <!-- Stok 2 -->  
+<div class="bg-gray-100 p-4 rounded-xl shadow-md text-center">  
+  <h3 class="text-lg font-semibold mb-1 text-gray-500">MAX 3 700K</h3>  
+  <p class="text-sm text-gray-600 mb-3">EVO 9 MAX 3 | SG 5 RASA | BUNDLE LEGENDARY 3 | NARUTO ON | SASUKE ON
+
 OP » 700</p>
-      <button onclick="showStockImage('stok2.jpg')" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg">Lihat Stok 2</button>
-    </div>
-
-    <!-- Stok 3 -->
-    <div class="bg-gray-100 p-4 rounded-xl shadow-md text-center">
-      <h3 class="text-lg font-semibold mb-1 text-gray-500">Not Available</h3>
-      <p class="text-sm text-gray-600 mb-3">Not Available</p>
-      <button onclick="showStockImage('stok3.jpg')" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg">Lihat Stok 3</button>
-    </div>
-  </div>
-
-  <div class="text-center mt-8">
-    <button onclick="backToMain()" class="bg-gray-700 hover:bg-gray-800 text-white px-6 py-2 rounded-lg">
-      Kembali
-    </button>
-  </div>
+<button onclick="showStockImage('stok2.jpg')" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg">Lihat Stok 2</button>
 </div>
 
-<!-- MODAL GAMBAR -->
-<div id="imageModal" class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center opacity-0 pointer-events-none transition-all-smooth z-50">
-  <div class="relative">
-    <img id="modalImage" src="" alt="Stok" class="max-h-[80vh] rounded-xl shadow-xl">
-    <button onclick="hideStockImage()" class="absolute top-2 right-2 bg-white text-black px-2 py-1 rounded-full shadow-md hover:bg-red-500 hover:text-white transition">✕</button>
-  </div>
+<!-- Stok 3 -->  
+<div class="bg-gray-100 p-4 rounded-xl shadow-md text-center">  
+  <h3 class="text-lg font-semibold mb-1 text-gray-500">Not Available</h3>  
+  <p class="text-sm text-gray-600 mb-3">Not Available</p>  
+  <button onclick="showStockImage('stok3.jpg')" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg">Lihat Stok 3</button>  
 </div>
 
-  <script>
-    const profilePic = document.getElementById('profile-pic');
-    const profileName = document.getElementById('profile-name');
-    const username = document.getElementById('username');
-    const startBtn = document.getElementById('startBtn');
-    const mainContent = document.getElementById('mainContent');
-    const intro = document.getElementById('intro');
-
-    function startApp() {
-      profilePic.classList.remove('w-72', 'h-72');
-      profilePic.classList.add('w-60', 'h-60');
-      profileName.style.opacity = '0';
-      username.style.opacity = '0';
-      startBtn.style.opacity = '0';
-      startBtn.style.pointerEvents = 'none';
-
-      document.getElementById('bgMusic').play().catch(() => {
-        console.log("Autoplay gagal, user perlu interaksi.");
-      });
-
-      setTimeout(() => {
-        intro.style.opacity = '0';
-        intro.style.pointerEvents = 'none';
-        mainContent.classList.remove('opacity-0', 'pointer-events-none');
-      }, 600);
-    }
-  </script>
-
-<!-- Chatbot pop-up -->
-<div id="chatbot" class="fixed top-4 left-2 right-2 bg-gray-800 text-white rounded-xl shadow-lg overflow-hidden opacity-0 scale-95 pointer-events-none transition-all duration-500 z-50 max-h-80">
-  <!-- Header -->
-  <div class="flex justify-between items-center px-4 pt-3">
-    <h3 class="text-lg font-semibold text-blue-400 flex items-center gap-2">
-      <i class="fas fa-shield-alt"></i> Tips Keamanan Akun (Scroll in pop up for more)
-    </h3>
-    <button onclick="toggleChatbot()" class="text-white hover:text-red-400 text-3xl leading-none font-bold">
-      &times;
-    </button>
-  </div>
-
-  <!-- Isi konten scrollable -->
-  <div class="p-4 text-sm space-y-4 max-h-52 overflow-y-auto">
-    <ul class="list-disc list-inside space-y-2">
-      <li>Ganti email pemulihan jadi email kamu</li>
-      <li>Ganti nomor pemulihan jadi nomor kamu</li>
-      <li>Periksa aktivitas terakhir akun</li>
-      <li>Aktifkan v2f (wajib)</li>
-      <li>Jangan login di HP/browser orang lain</li>
-      <li>Logout dari semua perangkat lain</li>
-      <li>Jangan klik link mencurigakan</li>
-      <li>Tambahkan v2f 8 kode cadangan lalu screenshot</li>
-      <li>Amankan juga akun email utama</li>
-      <li>Ganti sandi</li>
-    </ul>
-    <p class="text-blue-400 font-medium">#StaySafe with Jenz Tyzz!</p>
-  </div>
-
-  <!-- Tombol kembali -->
-  <div class="flex justify-center px-4 pb-4">
-    <button onclick="toggleChatbot()" class="bg-yellow-600 hover:bg-yellow-700 transition text-white font-semibold px-6 py-2 rounded-lg">
-      Kembali
-    </button>
-  </div>
-</div>
-
-<script>
-  // ⛔️ Matikan scroll pas pertama kali buka halaman
-  document.body.classList.add('noscroll');
-
-  // Fungsi tombol “Lanjutkan”
-  function startApp() {
-    const profilePic = document.getElementById('profile-pic');
-    const profileName = document.getElementById('profile-name');
-    const username = document.getElementById('username');
-    const startBtn = document.getElementById('startBtn');
-    const intro = document.getElementById('intro');
-    const mainContent = document.getElementById('mainContent');
-
-    profilePic.classList.remove('w-72', 'h-72');
-    profilePic.classList.add('w-60', 'h-60');
-    profileName.style.opacity = '0';
-    username.style.opacity = '0';
-    startBtn.style.opacity = '0';
-    startBtn.style.pointerEvents = 'none';
-
-    const music = document.getElementById('bgMusic');
-    if (music) {
-      music.play().catch(() => {
-        console.log("Autoplay gagal, user perlu interaksi.");
-      });
-    }
-
-    setTimeout(() => {
-      intro.style.opacity = '0';
-      intro.style.pointerEvents = 'none';
-      mainContent.classList.remove('opacity-0', 'pointer-events-none');
-      document.body.classList.remove('noscroll'); // ✅ Buka scroll di halaman lain
-    }, 600);
-  }
-
-  // 🔁 Agar bisa dipanggil dari tombol HTML
-  window.startApp = startApp;
-
-  // 🧠 Chatbot toggle
-  const openBtn = document.getElementById('openChatbot');
-  const chatbotBox = document.getElementById('chatbot');
-  let isOpen = false;
-
-  function toggleChatbot() {
-    isOpen = !isOpen;
-    chatbotBox.classList.toggle('opacity-0', !isOpen);
-    chatbotBox.classList.toggle('scale-95', !isOpen);
-    chatbotBox.classList.toggle('pointer-events-none', !isOpen);
-    chatbotBox.classList.toggle('opacity-100', isOpen);
-    chatbotBox.classList.toggle('scale-100', isOpen);
-    chatbotBox.classList.toggle('pointer-events-auto', isOpen);
-  }
-
-  openBtn.addEventListener('click', toggleChatbot);
-  function showStockPage() {
-  document.getElementById('mainContent').classList.add('opacity-0', 'pointer-events-none');
-  document.getElementById('stockPage').classList.remove('opacity-0', 'pointer-events-none');
-}
-
-function backToMain() {
-  document.getElementById('stockPage').classList.add('opacity-0', 'pointer-events-none');
-  document.getElementById('mainContent').classList.remove('opacity-0', 'pointer-events-none');
-}
-</script>
-
-<script>
-  function showStockImage(imageSrc) {
-    const modal = document.getElementById("imageModal");
-    const img = document.getElementById("modalImage");
-    img.src = imageSrc;
-    modal.classList.remove("opacity-0", "pointer-events-none");
-    modal.classList.add("opacity-100", "pointer-events-auto");
-  }
-
-  function hideStockImage() {
-    const modal = document.getElementById("imageModal");
-    modal.classList.add("opacity-0", "pointer-events-none");
-    modal.classList.remove("opacity-100", "pointer-events-auto");
-  }
-</script>
-</body>
-</html>
+  </div>    <div class="text-center mt-8">  
+    <button onclick="backToMain()" class="bg-gray-700 hover:bg-gray-800 text-white px-6 py-2 rounded-lg">  
+      Kembali  
+    </button>  
+  </div>  
+</div>  <!-- MODAL GAMBAR -->  <div id="imageModal" class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center opacity-0 pointer-events-none transition-all-smooth z-50">  
+  <div class="relative">  
+    <img id="modalImage" src="" alt="Stok" class="max-h-[80vh] rounded-xl shadow-xl">  
+    <button onclick="hideStockImage()" class="absolute top-2 right-2 bg-white text-black px-2 py-1 rounded-full shadow-md hover:bg-red-500 hover:text-white transition">✕</button>  
+  </div>  
+</div>    <script>  
+    const profilePic = document.getElementById('profile-pic');  
+    const profileName = document.getElementById('profile-name');  
+    const username = document.getElementById('username');  
+    const startBtn = document.getElementById('startBtn');  
+    const mainContent = document.getElementById('mainContent');  
+    const intro = document.getElementById('intro');  
+  
+    function startApp() {  
+      profilePic.classList.remove('w-72', 'h-72');  
+      profilePic.classList.add('w-60', 'h-60');  
+      profileName.style.opacity = '0';  
+      username.style.opacity = '0';  
+      startBtn.style.opacity = '0';  
+      startBtn.style.pointerEvents = 'none';  
+  
+      document.getElementById('bgMusic').play().catch(() => {  
+        console.log("Autoplay gagal, user perlu interaksi.");  
+      });  
+  
+      setTimeout(() => {  
+        intro.style.opacity = '0';  
+        intro.style.pointerEvents = 'none';  
+        mainContent.classList.remove('opacity-0', 'pointer-events-none');  
+      }, 600);  
+    }  
+  </script>  <!-- Chatbot pop-up -->  <div id="chatbot" class="fixed top-4 left-2 right-2 bg-gray-800 text-white rounded-xl shadow-lg overflow-hidden opacity-0 scale-95 pointer-events-none transition-all duration-500 z-50 max-h-80">  
+  <!-- Header -->  
+  <div class="flex justify-between items-center px-4 pt-3">  
+    <h3 class="text-lg font-semibold text-blue-400 flex items-center gap-2">  
+      <i class="fas fa-shield-alt"></i> Tips Keamanan Akun (Scroll in pop up for more)  
+    </h3>  
+    <button onclick="toggleChatbot()" class="text-white hover:text-red-400 text-3xl leading-none font-bold">  
+      &times;  
+    </button>  
+  </div>    <!-- Isi konten scrollable -->    <div class="p-4 text-sm space-y-4 max-h-52 overflow-y-auto">  
+    <ul class="list-disc list-inside space-y-2">  
+      <li>Ganti email pemulihan jadi email kamu</li>  
+      <li>Ganti nomor pemulihan jadi nomor kamu</li>  
+      <li>Periksa aktivitas terakhir akun</li>  
+      <li>Aktifkan v2f (wajib)</li>  
+      <li>Jangan login di HP/browser orang lain</li>  
+      <li>Logout dari semua perangkat lain</li>  
+      <li>Jangan klik link mencurigakan</li>  
+      <li>Tambahkan v2f 8 kode cadangan lalu screenshot</li>  
+      <li>Amankan juga akun email utama</li>  
+      <li>Ganti sandi</li>  
+    </ul>  
+    <p class="text-blue-400 font-medium">#StaySafe with Jenz Tyzz!</p>  
+  </div>    <!-- Tombol kembali -->    <div class="flex justify-center px-4 pb-4">  
+    <button onclick="toggleChatbot()" class="bg-yellow-600 hover:bg-yellow-700 transition text-white font-semibold px-6 py-2 rounded-lg">  
+      Kembali  
+    </button>  
+  </div>  
+</div>  <script>  
+  // ⛔️ Matikan scroll pas pertama kali buka halaman  
+  document.body.classList.add('noscroll');  
+  
+  // Fungsi tombol “Lanjutkan”  
+  function startApp() {  
+    const profilePic = document.getElementById('profile-pic');  
+    const profileName = document.getElementById('profile-name');  
+    const username = document.getElementById('username');  
+    const startBtn = document.getElementById('startBtn');  
+    const intro = document.getElementById('intro');  
+    const mainContent = document.getElementById('mainContent');  
+  
+    profilePic.classList.remove('w-72', 'h-72');  
+    profilePic.classList.add('w-60', 'h-60');  
+    profileName.style.opacity = '0';  
+    username.style.opacity = '0';  
+    startBtn.style.opacity = '0';  
+    startBtn.style.pointerEvents = 'none';  
+  
+    const music = document.getElementById('bgMusic');  
+    if (music) {  
+      music.play().catch(() => {  
+        console.log("Autoplay gagal, user perlu interaksi.");  
+      });  
+    }  
+  
+    setTimeout(() => {  
+      intro.style.opacity = '0';  
+      intro.style.pointerEvents = 'none';  
+      mainContent.classList.remove('opacity-0', 'pointer-events-none');  
+      document.body.classList.remove('noscroll'); // ✅ Buka scroll di halaman lain  
+    }, 600);  
+  }  
+  
+  // 🔁 Agar bisa dipanggil dari tombol HTML  
+  window.startApp = startApp;  
+  
+  // 🧠 Chatbot toggle  
+  const openBtn = document.getElementById('openChatbot');  
+  const chatbotBox = document.getElementById('chatbot');  
+  let isOpen = false;  
+  
+  function toggleChatbot() {  
+    isOpen = !isOpen;  
+    chatbotBox.classList.toggle('opacity-0', !isOpen);  
+    chatbotBox.classList.toggle('scale-95', !isOpen);  
+    chatbotBox.classList.toggle('pointer-events-none', !isOpen);  
+    chatbotBox.classList.toggle('opacity-100', isOpen);  
+    chatbotBox.classList.toggle('scale-100', isOpen);  
+    chatbotBox.classList.toggle('pointer-events-auto', isOpen);  
+  }  
+  
+  openBtn.addEventListener('click', toggleChatbot);  
+  function showStockPage() {  
+  document.getElementById('mainContent').classList.add('opacity-0', 'pointer-events-none');  
+  document.getElementById('stockPage').classList.remove('opacity-0', 'pointer-events-none');  
+}  
+  
+function backToMain() {  
+  document.getElementById('stockPage').classList.add('opacity-0', 'pointer-events-none');  
+  document.getElementById('mainContent').classList.remove('opacity-0', 'pointer-events-none');  
+}  
+</script>  <script>  
+  function showStockImage(imageSrc) {  
+    const modal = document.getElementById("imageModal");  
+    const img = document.getElementById("modalImage");  
+    img.src = imageSrc;  
+    modal.classList.remove("opacity-0", "pointer-events-none");  
+    modal.classList.add("opacity-100", "pointer-events-auto");  
+  }  
+  
+  function hideStockImage() {  
+    const modal = document.getElementById("imageModal");  
+    modal.classList.add("opacity-0", "pointer-events-none");  
+    modal.classList.remove("opacity-100", "pointer-events-auto");  
+  }  
+</script>  </body>  
+</html>  
