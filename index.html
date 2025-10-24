@@ -12,382 +12,424 @@
         }
         body {
             background: #000;
-            color: #00ff00;
+            color: #ff0000;
             font-family: 'Courier New', monospace;
             overflow: hidden;
             height: 100vh;
-        }
-        .matrix-bg {
             position: fixed;
-            top: 0;
-            left: 0;
             width: 100%;
-            height: 100%;
-            background: linear-gradient(45deg, #001100, #000, #003300);
-            z-index: -1;
         }
-        .terminal {
+        .extreme-panic {
+            animation: extremePanic 0.05s infinite;
+        }
+        @keyframes extremePanic {
+            0% { 
+                background: #ff0000; 
+                transform: scale(1) rotate(0deg) translate(0, 0);
+                filter: hue-rotate(0deg) blur(0px);
+            }
+            20% { 
+                background: #0000ff; 
+                transform: scale(1.3) rotate(5deg) translate(-20px, -10px);
+                filter: hue-rotate(90deg) blur(3px);
+            }
+            40% { 
+                background: #00ff00; 
+                transform: scale(0.7) rotate(-10deg) translate(15px, 20px);
+                filter: hue-rotate(180deg) blur(5px);
+            }
+            60% { 
+                background: #ffff00; 
+                transform: scale(1.2) rotate(8deg) translate(-15px, 15px);
+                filter: hue-rotate(270deg) blur(2px);
+            }
+            80% { 
+                background: #ff00ff; 
+                transform: scale(0.8) rotate(-5deg) translate(10px, -20px);
+                filter: hue-rotate(360deg) blur(4px);
+            }
+            100% { 
+                background: #ff0000; 
+                transform: scale(1) rotate(0deg) translate(0, 0);
+                filter: hue-rotate(0deg) blur(0px);
+            }
+        }
+        .panic-text {
             position: fixed;
-            top: 50px;
-            left: 50px;
-            right: 50px;
-            bottom: 50px;
-            background: rgba(0, 0, 0, 0.9);
-            border: 3px solid #00ff00;
-            padding: 20px;
-            overflow-y: auto;
-            box-shadow: 0 0 50px #00ff00;
-        }
-        .command {
-            color: #00ff00;
-            margin-bottom: 5px;
-        }
-        .output {
-            color: #00ff00;
-            margin-bottom: 10px;
-            white-space: pre-wrap;
-        }
-        .prompt {
-            color: #00ff00;
+            font-size: 60px;
             font-weight: bold;
+            color: #ffffff;
+            text-shadow: 0 0 20px #ff0000;
+            z-index: 10000;
+            animation: textPanic 0.1s infinite;
         }
-        .blink {
-            animation: blink 1s infinite;
+        @keyframes textPanic {
+            0% { transform: scale(1) rotate(0deg); opacity: 1; }
+            50% { transform: scale(1.5) rotate(180deg); opacity: 0.7; }
+            100% { transform: scale(1) rotate(360deg); opacity: 1; }
         }
-        @keyframes blink {
-            0%, 50% { opacity: 1; }
-            51%, 100% { opacity: 0; }
-        }
-        .warning {
+        .blood-effect {
+            position: fixed;
+            font-size: 40px;
             color: #ff0000;
-            text-shadow: 0 0 10px #ff0000;
-            animation: flash 0.3s infinite;
-        }
-        @keyframes flash {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.3; }
-        }
-        .hijack-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(255, 0, 0, 0.2);
-            z-index: 9998;
-            pointer-events: none;
-            display: none;
-        }
-        .panic-alert {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: #ff0000;
-            color: white;
-            padding: 30px;
-            font-size: 32px;
-            font-weight: bold;
             z-index: 9999;
-            border: 5px solid white;
-            text-align: center;
-            display: none;
+            animation: bloodDrip 3s linear forwards;
         }
-        .glitch {
-            animation: glitch 0.1s infinite;
+        @keyframes bloodDrip {
+            0% { transform: translateY(-100px) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
         }
-        @keyframes glitch {
-            0% { transform: translate(0); }
-            20% { transform: translate(-5px, 5px); }
-            40% { transform: translate(-5px, -5px); }
-            60% { transform: translate(5px, 5px); }
-            80% { transform: translate(5px, -5px); }
-            100% { transform: translate(0); }
+        .cursor-hijack {
+            position: fixed;
+            width: 50px;
+            height: 50px;
+            background: #ff0000;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 99999;
+            animation: cursorFlash 0.2s infinite;
+        }
+        @keyframes cursorFlash {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.5); }
         }
     </style>
 </head>
 <body>
-    <div class="matrix-bg"></div>
-    
-    <div class="terminal" id="terminal">
-        <div class="output">Initializing C:\>rootkit_v3.7.exe</div>
-        <div class="output">Establishing secure connection...</div>
-    </div>
+    <!-- Extreme Panic Elements -->
+    <div id="panicContainer"></div>
 
-    <div class="hijack-overlay" id="hijackOverlay"></div>
-    
-    <div class="panic-alert" id="panicAlert">
-        <div class="warning">🚨 CRITICAL SYSTEM BREACH 🚨</div>
-        <div>MALWARE ACTIVITY DETECTED</div>
-    </div>
-
-    <!-- AUDIO ELEMENTS -->
-    <audio id="typingSound" loop>
-        <source src="https://assets.mixkit.co/sfx/preview/mixkit-keyboard-typing-1386.mp3" type="audio/mp3">
-    </audio>
-    <audio id="alarmSound" loop>
+    <!-- Audio Elements - BANYAK BANGET -->
+    <audio id="alarm1" loop>
         <source src="https://assets.mixkit.co/sfx/preview/mixkit-emergency-alert-siren-2907.mp3" type="audio/mp3">
     </audio>
-    <audio id="accessSound">
-        <source src="https://assets.mixkit.co/sfx/preview/mixkit-security-accessed-2752.mp3" type="audio/mp3">
+    <audio id="alarm2" loop>
+        <source src="https://assets.mixkit.co/sfx/preview/mixkit-sci-fi-alarm-990.mp3" type="audio/mp3">
     </audio>
-    <audio id="screamSound">
+    <audio id="alarm3" loop>
+        <source src="https://assets.mixkit.co/sfx/preview/mixkit-air-raid-alarm-1000.mp3" type="audio/mp3">
+    </audio>
+    <audio id="scream1" loop>
         <source src="https://assets.mixkit.co/sfx/preview/mixkit-woman-scream-1172.mp3" type="audio/mp3">
     </audio>
-    <audio id="explosionSound">
+    <audio id="scream2">
+        <source src="https://assets.mixkit.co/sfx/preview/mixkit-horror-scream-2836.mp3" type="audio/mp3">
+    </audio>
+    <audio id="explosion1">
+        <source src="https://assets.mixkit.co/sfx/preview/mixkit-bomb-explosion-in-the-air-2801.mp3" type="audio/mp3">
+    </audio>
+    <audio id="explosion2" loop>
         <source src="https://assets.mixkit.co/sfx/preview/mixkit-explosion-rumble-2396.mp3" type="audio/mp3">
+    </audio>
+    <audio id="heartbeat" loop>
+        <source src="https://assets.mixkit.co/sfx/preview/mixkit-fast-heartbeat-1161.mp3" type="audio/mp3">
+    </audio>
+    <audio id="static" loop>
+        <source src="https://assets.mixkit.co/sfx/preview/mixkit-static-radio-2797.mp3" type="audio/mp3">
+    </audio>
+    <audio id="laugh" loop>
+        <source src="https://assets.mixkit.co/sfx/preview/mixkit-evil-villain-laugh-310.mp3" type="audio/mp3">
+    </audio>
+    <audio id="glassBreak">
+        <source src="https://assets.mixkit.co/sfx/preview/mixkit-breaking-glass-2781.mp3" type="audio/mp3">
     </audio>
 
     <script>
-        const terminal = document.getElementById('terminal');
-        const hijackOverlay = document.getElementById('hijackOverlay');
-        const panicAlert = document.getElementById('panicAlert');
+        // Get all audio elements
+        const alarm1 = document.getElementById('alarm1');
+        const alarm2 = document.getElementById('alarm2');
+        const alarm3 = document.getElementById('alarm3');
+        const scream1 = document.getElementById('scream1');
+        const scream2 = document.getElementById('scream2');
+        const explosion1 = document.getElementById('explosion1');
+        const explosion2 = document.getElementById('explosion2');
+        const heartbeat = document.getElementById('heartbeat');
+        const staticSound = document.getElementById('static');
+        const laugh = document.getElementById('laugh');
+        const glassBreak = document.getElementById('glassBreak');
 
-        // Audio elements
-        const typingSound = document.getElementById('typingSound');
-        const alarmSound = document.getElementById('alarmSound');
-        const accessSound = document.getElementById('accessSound');
-        const screamSound = document.getElementById('screamSound');
-        const explosionSound = document.getElementById('explosionSound');
-
-        let hackStep = 0;
-
-        const hackSequence = [
-            {
-                command: "nmap -sS -A 192.168.1.0/24",
-                output: `Starting Nmap 7.80 scan...
-Discovered hosts:
-192.168.1.1    - Router (TP-Link Archer)
-192.168.1.105  - Windows 11 PC [TARGET]
-192.168.1.203  - iPhone 14 Pro
-192.168.1.210  - Smart TV Samsung
-
-PORT     STATE SERVICE
-22/tcp   open  ssh
-80/tcp   open  http
-443/tcp  open  https
-3389/tcp open  rdps`
-            },
-            {
-                command: "hydra -l admin -P passwords.txt ssh://192.168.1.105",
-                output: `[DATA] attacking ssh://192.168.1.105:22/
-[22][ssh] host: 192.168.1.105   login: admin   password: P@ssw0rd123
-[STATUS] attack finished for 192.168.1.105 (valid pair found)`
-            },
-            {
-                command: "msfconsole -q",
-                output: `MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
-MMMMMMMMMMM                MMMMMMMMMM
-MMMN0$                         odMMMM
-MMMl                              $MM
-MMM    0                         'MMM
-MMM    d                          MMM
-MMM    d                          MMM
-MMM    d                          MMM
-MMM    d                          MMM
-MMM    d                          MMM
-MMM    d                          MMM
-MMM   ,d                          MMM
-MMM   d.                          MMM
-MMM   d'                          MMM
-MMM   d'                          MMM
-MMM   d'                          MMM
-MMM   d'                          MMM
-MMM   d'                          MMM
-MMM   d'                          MMM
-MMM   d'                          MMM`
-            },
-            {
-                command: "use exploit/windows/smb/ms17_010_eternalblue",
-                output: ""
-            },
-            {
-                command: "set RHOSTS 192.168.1.105",
-                output: "RHOSTS => 192.168.1.105"
-            },
-            {
-                command: "exploit",
-                output: `[*] Started reverse TCP handler
-[*] 192.168.1.105:445 - Connecting to target for exploitation.
-[+] 192.168.1.105:445 - Connection established for exploitation.
-[+] 192.168.1.105:445 - Target OS: Windows 11 Build 22621
-[!] 192.168.1.105:445 - EternalBlue SMB Exploit
-[+] 192.168.1.105:445 - Exploit successful!`
-            },
-            {
-                command: "meterpreter > sysinfo",
-                output: `Computer        : DESKTOP-ADMIN
-OS              : Windows 11 (10.0 Build 22621)
-Architecture    : x64
-System Language : en_US
-Domain          : WORKGROUP
-Logged On Users : 3
-Meterpreter     : x64/windows`
-            },
-            {
-                command: "meterpreter > webcam_snap",
-                output: `[*] Starting...
-[+] Got frame`
-            },
-            {
-                command: "meterpreter > keyscan_start",
-                output: `Starting the keystroke sniffer...`
-            },
-            {
-                command: "meterpreter > download C:/Users/Admin/Documents/*",
-                output: `[*] downloading: C:/Users/Admin/Documents/passwords.txt
-[*] downloading: C:/Users/Admin/Documents/bank_statements.pdf
-[*] downloading: C:/Users/Admin/Documents/personal_photos.zip
-[*] downloaded  : C:/Users/Admin/Documents/passwords.txt -> passwords.txt
-[*] downloaded  : C:/Users/Admin/Documents/bank_statements.pdf -> bank_statements.pdf
-[*] downloaded  : C:/Users/Admin/Documents/personal_photos.zip -> personal_photos.zip`
-            }
+        // PANIC MESSAGES - BANYAK BANGET
+        const panicMessages = [
+            "💀 MALWARE DETECTED! 💀",
+            "🚨 SYSTEM COMPROMISED! 🚨",
+            "📡 DATA THEFT IN PROGRESS!",
+            "👁️ CAMERA HIJACKED!",
+            "🎤 MICROPHONE ACTIVATED!",
+            "📍 LOCATION TRACKING!",
+            "💾 FILES ENCRYPTED!",
+            "💰 BANK ACCOUNTS HACKED!",
+            "🔐 PASSWORDS STOLEN!",
+            "📱 DEVICE BRICKED!",
+            "🌐 NETWORK BREACHED!",
+            "⚡ CRITICAL FAILURE!",
+            "🔥 SYSTEM MELTDOWN!",
+            "💥 EXPLOSIVE BREACH!",
+            "👻 GHOST IN SYSTEM!",
+            "🐍 PYTHON MALWARE!",
+            "🔪 TROJAN ACTIVATED!",
+            "☠️ RANSOMWARE ACTIVE!",
+            "👹 DEMONWARE RUNNING!",
+            "💣 LOGIC BOMB TRIGGERED!"
         ];
 
-        function startHackSimulation() {
-            typingSound.volume = 0.3;
-            typingSound.play();
+        function startExtremePanic() {
+            // PLAY SEMUA SOUND SEKALIGUS - VOLUME MAX!
+            playAllSoundsMaxVolume();
             
-            function nextStep() {
-                if (hackStep < hackSequence.length) {
-                    const step = hackSequence[hackStep];
-                    
-                    // Show command
-                    const commandElement = document.createElement('div');
-                    commandElement.className = 'command';
-                    commandElement.innerHTML = `<span class="prompt">root@blackhat:~# </span>${step.command}`;
-                    terminal.appendChild(commandElement);
-                    
-                    // Show output with delay
-                    setTimeout(() => {
-                        const outputElement = document.createElement('div');
-                        outputElement.className = 'output';
-                        outputElement.textContent = step.output;
-                        terminal.appendChild(outputElement);
-                        
-                        terminal.scrollTop = terminal.scrollHeight;
-                        
-                        // Special effects at certain steps
-                        if (hackStep === 1) { // Password found
-                            accessSound.play();
-                        }
-                        if (hackStep === 5) { // Exploit successful
-                            startPanicMode();
-                        }
-                        if (hackStep === 9) { // Data stolen
-                            extremePanic();
-                        }
-                        
-                        hackStep++;
-                        setTimeout(nextStep, 2000);
-                    }, 1000);
-                    
-                    terminal.scrollTop = terminal.scrollHeight;
+            // EXTREME VISUAL EFFECTS
+            document.body.classList.add('extreme-panic');
+            
+            // HIJACK SEMUA INPUT
+            hijackEverything();
+            
+            // CREATE BLOOD EFFECTS
+            createBloodRain();
+            
+            // SHOW PANIC TEXTS
+            showPanicTexts();
+            
+            // CREATE CURSOR HIJACK
+            createCursorHijack();
+            
+            // START DEVICE VIBRATION
+            startExtremeVibration();
+            
+            // AUTO CRASH COUNTDOWN
+            startCrashCountdown();
+            
+            // RANDOM EXPLOSIONS
+            startRandomExplosions();
+            
+            // SCREAM LOOP
+            startScreamLoop();
+        }
+
+        function playAllSoundsMaxVolume() {
+            const sounds = [alarm1, alarm2, alarm3, scream1, explosion2, heartbeat, staticSound, laugh];
+            
+            sounds.forEach(sound => {
+                sound.volume = 1.0;
+                sound.play().catch(e => console.log('Sound play failed'));
+            });
+            
+            // Play single sounds randomly
+            setInterval(() => {
+                explosion1.currentTime = 0;
+                explosion1.volume = 1.0;
+                explosion1.play();
+                
+                scream2.currentTime = 0;
+                scream2.volume = 1.0;
+                scream2.play();
+                
+                glassBreak.currentTime = 0;
+                glassBreak.volume = 1.0;
+                glassBreak.play();
+            }, 3000);
+        }
+
+        function hijackEverything() {
+            // Block all keyboard input
+            document.addEventListener('keydown', (e) => {
+                e.preventDefault();
+                // Create random panic effect on key press
+                createExplosionEffect(e.clientX, e.clientY);
+            });
+
+            // Hijack mouse movement
+            document.addEventListener('mousemove', (e) => {
+                // Randomly jump screen
+                if (Math.random() > 0.8) {
+                    window.scrollTo(
+                        Math.random() * 1000,
+                        Math.random() * 1000
+                    );
                 }
+            });
+
+            // Block all clicks
+            document.addEventListener('click', (e) => {
+                e.preventDefault();
+                createBloodEffect(e.clientX, e.clientY);
+            });
+
+            // Prevent right click
+            document.addEventListener('contextmenu', (e) => {
+                e.preventDefault();
+            });
+
+            // Block touch
+            document.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+            });
+        }
+
+        function createBloodRain() {
+            setInterval(() => {
+                for (let i = 0; i < 5; i++) {
+                    const blood = document.createElement('div');
+                    blood.className = 'blood-effect';
+                    blood.textContent = '💀';
+                    blood.style.left = Math.random() * 100 + 'vw';
+                    blood.style.fontSize = (20 + Math.random() * 40) + 'px';
+                    document.body.appendChild(blood);
+                    
+                    setTimeout(() => blood.remove(), 3000);
+                }
+            }, 200);
+        }
+
+        function showPanicTexts() {
+            setInterval(() => {
+                for (let i = 0; i < 3; i++) {
+                    const text = document.createElement('div');
+                    text.className = 'panic-text';
+                    text.textContent = panicMessages[Math.floor(Math.random() * panicMessages.length)];
+                    text.style.left = Math.random() * 80 + 'vw';
+                    text.style.top = Math.random() * 80 + 'vh';
+                    text.style.color = `hsl(${Math.random() * 360}, 100%, 50%)`;
+                    document.body.appendChild(text);
+                    
+                    setTimeout(() => text.remove(), 2000);
+                }
+            }, 500);
+        }
+
+        function createCursorHijack() {
+            const cursor = document.createElement('div');
+            cursor.className = 'cursor-hijack';
+            document.body.appendChild(cursor);
+
+            document.addEventListener('mousemove', (e) => {
+                cursor.style.left = (e.clientX - 25) + 'px';
+                cursor.style.top = (e.clientY - 25) + 'px';
+            });
+        }
+
+        function startExtremeVibration() {
+            if (navigator.vibrate) {
+                setInterval(() => {
+                    navigator.vibrate([100, 50, 100, 50, 100, 50, 200]);
+                }, 1000);
             }
-            
-            nextStep();
         }
 
-        function startPanicMode() {
-            // Start alarm sound
-            alarmSound.volume = 0.8;
-            alarmSound.play();
-            
-            // Show hijack overlay
-            hijackOverlay.style.display = 'block';
-            
-            // Show panic alert
-            panicAlert.style.display = 'block';
-            
-            // Start screen glitch
-            document.body.classList.add('glitch');
-            
-            // Add panic messages
-            const panicMessages = [
-                "[!] INTRUSION DETECTED!",
-                "[!] MALWARE ACTIVITY!", 
-                "[!] SYSTEM BREACH!",
-                "[!] DATA THEFT IN PROGRESS!",
-                "[!] CAMERA ACCESSED!",
-                "[!] KEYLOGGER ACTIVE!",
-                "[!] FILES BEING STOLEN!",
-                "[!] BANK DATA COMPROMISED!"
-            ];
-            
-            setInterval(() => {
-                const panicMsg = document.createElement('div');
-                panicMsg.className = 'output warning';
-                panicMsg.textContent = panicMessages[Math.floor(Math.random() * panicMessages.length)];
-                terminal.appendChild(panicMsg);
-                terminal.scrollTop = terminal.scrollHeight;
-            }, 3000);
-        }
+        function startCrashCountdown() {
+            let count = 10;
+            const countdownElement = document.createElement('div');
+            countdownElement.style.position = 'fixed';
+            countdownElement.style.top = '50%';
+            countdownElement.style.left = '50%';
+            countdownElement.style.transform = 'translate(-50%, -50%)';
+            countdownElement.style.fontSize = '100px';
+            countdownElement.style.color = '#ffffff';
+            countdownElement.style.zIndex = '100000';
+            countdownElement.style.textShadow = '0 0 30px #ff0000';
+            countdownElement.textContent = count;
+            document.body.appendChild(countdownElement);
 
-        function extremePanic() {
-            // Play scream and explosion
-            screamSound.volume = 1.0;
-            explosionSound.volume = 1.0;
-            screamSound.play();
-            explosionSound.play();
-            
-            // Extreme visual effects
-            setInterval(() => {
-                document.body.style.background = `rgb(${Math.random()*255}, ${Math.random()*255}, ${Math.random()*255})`;
-            }, 100);
-            
-            // Add final takeover message
-            setTimeout(() => {
-                const takeoverElement = document.createElement('div');
-                takeoverElement.className = 'warning';
-                takeoverElement.innerHTML = `
-╔════════════════════════════════════════╗
-║           SYSTEM TAKEOVER COMPLETE     ║
-╠════════════════════════════════════════╣
-║ ✅ Remote Access Established           ║
-║ ✅ All Data Compromised                ║
-║ ✅ Persistence Installed               ║
-║ ✅ Backdoor Active                     ║
-║ ✅ Cover Tracks Complete               ║
-╚════════════════════════════════════════╝
-                `;
-                terminal.appendChild(takeoverElement);
-                terminal.scrollTop = terminal.scrollHeight;
-            }, 3000);
-
-            // Try to crash browser after 10 seconds
-            setTimeout(() => {
-                try {
-                    window.open('', '_self', '');
-                    window.close();
-                    for(let i = 0; i < 10; i++) {
-                        window.location.href = 'about:blank';
-                    }
-                } catch(e) {
-                    // Browser protected
+            const countdown = setInterval(() => {
+                count--;
+                countdownElement.textContent = count;
+                
+                // Increase intensity
+                if (count <= 5) {
+                    countdownElement.style.animation = 'textPanic 0.05s infinite';
+                    countdownElement.style.fontSize = '150px';
                 }
-            }, 10000);
+                
+                if (count <= 0) {
+                    clearInterval(countdown);
+                    triggerBrowserCrash();
+                }
+            }, 1000);
         }
 
-        // Start hacking simulation automatically
-        setTimeout(startHackSimulation, 1000);
+        function startRandomExplosions() {
+            setInterval(() => {
+                createExplosionEffect(
+                    Math.random() * window.innerWidth,
+                    Math.random() * window.innerHeight
+                );
+            }, 1000);
+        }
 
-        // Block all user interactions
-        document.addEventListener('keydown', (e) => {
-            e.preventDefault();
-        });
-        document.addEventListener('contextmenu', (e) => {
-            e.preventDefault();
-        });
+        function startScreamLoop() {
+            setInterval(() => {
+                scream1.currentTime = 0;
+                scream1.play();
+            }, 5000);
+        }
 
-        // Add blinking cursor at the end
-        setTimeout(() => {
-            const cursorElement = document.createElement('div');
-            cursorElement.className = 'prompt blink';
-            cursorElement.innerHTML = 'root@blackhat:~# _';
-            terminal.appendChild(cursorElement);
-            terminal.scrollTop = terminal.scrollHeight;
-        }, 500);
+        function createExplosionEffect(x, y) {
+            for (let i = 0; i < 20; i++) {
+                const particle = document.createElement('div');
+                particle.style.position = 'fixed';
+                particle.style.left = x + 'px';
+                particle.style.top = y + 'px';
+                particle.style.width = '20px';
+                particle.style.height = '20px';
+                particle.style.background = `hsl(${Math.random() * 360}, 100%, 50%)`;
+                particle.style.borderRadius = '50%';
+                particle.style.zIndex = '99999';
+                
+                const angle = Math.random() * Math.PI * 2;
+                const distance = 100 + Math.random() * 200;
+                
+                document.body.appendChild(particle);
+                
+                particle.animate([
+                    { transform: 'translate(0, 0) scale(1)', opacity: 1 },
+                    { transform: `translate(${Math.cos(angle) * distance}px, ${Math.sin(angle) * distance}px) scale(0)`, opacity: 0 }
+                ], {
+                    duration: 1000,
+                    easing: 'ease-out'
+                });
+                
+                setTimeout(() => particle.remove(), 1000);
+            }
+        }
+
+        function createBloodEffect(x, y) {
+            const blood = document.createElement('div');
+            blood.style.position = 'fixed';
+            blood.style.left = x + 'px';
+            blood.style.top = y + 'px';
+            blood.style.fontSize = '40px';
+            blood.style.color = '#ff0000';
+            blood.style.zIndex = '99999';
+            blood.textContent = '🩸';
+            blood.style.animation = 'textPanic 0.1s infinite';
+            document.body.appendChild(blood);
+            
+            setTimeout(() => blood.remove(), 2000);
+        }
+
+        function triggerBrowserCrash() {
+            // Extreme crash methods
+            try {
+                // Method 1: Memory overload
+                const hugeArray = [];
+                while(true) {
+                    hugeArray.push(new Array(1000000).fill('CRASH'));
+                }
+            } catch(e) {
+                // Method 2: Infinite redirect
+                for(let i = 0; i < 100; i++) {
+                    window.location.href = 'about:blank';
+                }
+                // Method 3: Close window
+                window.open('', '_self', '');
+                window.close();
+            }
+        }
+
+        // START PANIC IMMEDIATELY ON PAGE LOAD
+        window.onload = startExtremePanic;
+
+        // Also start when DOM is ready
+        document.addEventListener('DOMContentLoaded', startExtremePanic);
+
     </script>
 </body>
 </html>
